@@ -118,6 +118,13 @@ video.effect {
   border: solid 1px #000;
   border-radius: 6px;
 }
+#result2 {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  height: 150px;
+  border: solid 1px #000;
+  border-radius: 6px;
+}
 #result span {
   line-height: 1.5;
 }
