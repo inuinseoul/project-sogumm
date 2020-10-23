@@ -74,6 +74,9 @@ $(function () {
    */
   function onJoin(roomId, userList) {
     console.log('onJoin', userList);
+    for (var user in userList) {
+      users.push(userList[user])
+    }
     if (Object.size(userList) > 1) {
       onDetectUser();
     }
@@ -259,7 +262,19 @@ $(function () {
     for (var key in data) {
       context[key] = data[key];
     }
-  })
+    // 여기서 값처리
+    let another = 0;
+    for (var i in users) {
+      if (userId != users[i]) {
+        another = users[i];
+      }
+    }
+    another_f = another + '_f';
+    another_i = another + '_i';
+    final_span2.innerHTML = context[another_f];
+    interim_span2.innerHTML = context[another_i];
+
+  });
 
   recognition.onresult = function (event) {
     console.log('onresult', event);
@@ -286,8 +301,22 @@ $(function () {
     interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
-    context[userId] = finalTranscript;
+    userId_f = userId + '_f';
+    userId_i = userId + '_i';
+    context[userId_f] = finalTranscript;
+    context[userId_i] = interimTranscript;
     socket.emit('inu', context);
+    // 여기서 값처리
+    let another = 0;
+    for (var i in users) {
+      if (userId != users[i]) {
+        another = users[i];
+      }
+    }
+    another_f = another + '_f';
+    another_i = another + '_i';
+    final_span2.innerHTML = context[another_f];
+    interim_span2.innerHTML = context[another_i];
 
     console.log('finalTranscript', finalTranscript);
     console.log('interimTranscript', interimTranscript);
@@ -447,7 +476,7 @@ $(function () {
       const text = final_span.innerText || defaultMsg;
       textToSpeech(text);
     });
-
+    start()
     $btnMic.addEventListener('click', start);
   }
 

@@ -25,14 +25,17 @@
   <div class="wrap">
     <div class="buttons">
       <button id="btn-camera">Camera Pause</button>
-      <button id="btn-mic">Mic</button>
+      <button id="btn-mic" class="on">Mic</button>
       <button id="btn-tts">Text to speech</button>
     </div>
     <div id="result" style="overflow-y:scroll;" onScroll="spantitle.scrollLeft=this.scrollLeft;">
       <span class="final" id="final_span"></span>
       <span class="interim" id="interim_span"></span>
     </div>
-
+    <div id="result" style="overflow-y:scroll;" onScroll="spantitle.scrollLeft=this.scrollLeft;">
+      <span class="final" id="final_span2"></span>
+      <span class="interim" id="interim_span2"></span>
+    </div>
     <audio id="audio" src="audio/ending.mp3"></audio>
     <!-- 
 		<div>
