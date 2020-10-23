@@ -217,6 +217,7 @@ $(function () {
   const $audio = document.querySelector('#audio');
   const $btnMic = document.querySelector('#btn-mic');
   const $resultWrap = document.querySelector('#result');
+  const $resultWrap2 = document.querySelector('#result2');
   const $iconMusic = document.querySelector('#icon-music');
 
   let isRecognizing = false;
@@ -300,6 +301,7 @@ $(function () {
     final_span.innerHTML = linebreak(finalTranscript);
     interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
+    $resultWrap2.scrollTop = $resultWrap2.scrollHeight;
 
     userId_f = userId + '_f';
     userId_i = userId + '_i';
