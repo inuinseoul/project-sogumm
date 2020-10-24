@@ -272,8 +272,8 @@ $(function () {
     }
     another_f = another + '_f';
     another_i = another + '_i';
-    final_span2.innerHTML = context[another_f];
-    interim_span2.innerHTML = context[another_i];
+    final_span2.innerHTML = linebreak(context[another_f]);
+    interim_span2.innerHTML = linebreak(context[another_i]);
 
   });
 
@@ -291,7 +291,7 @@ $(function () {
       const transcript = event.results[i][0].transcript;
 
       if (event.results[i].isFinal) {
-        finalTranscript += transcript;
+        finalTranscript += '[' + userId + "] " + transcript + '\n';
       } else {
         interimTranscript += transcript;
       }
@@ -317,8 +317,8 @@ $(function () {
     }
     another_f = another + '_f';
     another_i = another + '_i';
-    final_span2.innerHTML = context[another_f];
-    interim_span2.innerHTML = context[another_i];
+    final_span2.innerHTML = linebreak(context[another_f]);
+    interim_span2.innerHTML = linebreak(context[another_i]);
 
     console.log('finalTranscript', finalTranscript);
     console.log('interimTranscript', interimTranscript);
