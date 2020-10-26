@@ -36,7 +36,6 @@ module.exports = (http) => {
     socket.on('enter', (roomName, userId) => {
       roomId = roomName;
       socket.join(roomId); // 소켓을 특정 room에 binding합니다.
-
       // 룸에 사용자 정보 추가, 이미 룸이 있는경우
       if (rooms[roomId]) {
         console.log('이미 룸이 있는 경우');
@@ -84,14 +83,17 @@ module.exports = (http) => {
       if (roomId) {
         socket.broadcast.to(roomId).emit('leave', rooms[roomId][socket.id]); // 자신 제외 룸안의 유저ID 전달
         delete rooms[roomId][socket.id]; // 해당 유저 제거
+        if (Object.keys(rooms[roomId]).length == 0) {
+          delete rooms[roomId];
+        }
       }
     });
 
-    socket.on('inu', (data) => {
+    socket.on('sendScript', (data) => {
       for (var key in data) {
         context[key] = data[key];
       }
-      io.emit('inwoo', context);
+      io.emit('getScript', context);
     });
   });
 

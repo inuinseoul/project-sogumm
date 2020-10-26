@@ -134,11 +134,12 @@ $(function () {
       .toString(32)
       .toUpperCase()
       .replace(/\./g, '-');
-
     if (location.hash.length > 2) {
       $uniqueToken.attr('href', location.href);
+      roomId = location.href;
     } else {
       location.hash = '#' + hashValue;
+      roomId = location.href;
     }
   }
 
@@ -260,7 +261,7 @@ $(function () {
    */
   context[roomId] = '';
 
-  socket.on('inwoo', (data) => {
+  socket.on('getScript', (data) => {
     for (var key in data) {
       context[key] = data[key];
     }
@@ -305,7 +306,7 @@ $(function () {
 
     context[roomId] = finalTranscript;
     context[userId] = interimTranscript;
-    socket.emit('inu', context);
+    socket.emit('sendScript', context);
 
     console.log('finalTranscript', finalTranscript);
     console.log('interimTranscript', interimTranscript);
@@ -430,11 +431,12 @@ $(function () {
    * 초기 설정
    */
   function initialize() {
-    roomId = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
     userId = prompt('닉네임을 입력해주세요');
     setRoomToken();
+    roomId = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
     setClipboard();
-
+    console.log("===" + roomId + "===");
+    console.log("===" + userId + "===");
     // 소켓 관련 이벤트 바인딩
     socket.emit('enter', roomId, userId);
     socket.on('join', onJoin);
