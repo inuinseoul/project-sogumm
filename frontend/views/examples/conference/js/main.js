@@ -12,6 +12,7 @@ $(function () {
   let remoteUserId;
   let isOffer;
   let users = [];
+  let context = {};
 
   const socket = io();
   const mediaHandler = new MediaHandler();
@@ -217,7 +218,6 @@ $(function () {
   const $audio = document.querySelector('#audio');
   const $btnMic = document.querySelector('#btn-mic');
   const $resultWrap = document.querySelector('#result');
-  const $resultWrap2 = document.querySelector('#result2');
   const $iconMusic = document.querySelector('#icon-music');
 
   let isRecognizing = false;
@@ -258,23 +258,21 @@ $(function () {
   /**
    * 음성 인식 결과 처리
    */
-  let context = {}
+  context[roomId] = '';
+
   socket.on('inwoo', (data) => {
     for (var key in data) {
       context[key] = data[key];
     }
-    // 여기서 값처리
+
     let another = 0;
     for (var i in users) {
       if (userId != users[i]) {
         another = users[i];
       }
     }
-    another_f = another + '_f';
-    another_i = another + '_i';
-    final_span2.innerHTML = linebreak(context[another_f]);
-    interim_span2.innerHTML = linebreak(context[another_i]);
-
+    final_span.innerHTML = linebreak(context[roomId]);
+    $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
 
   recognition.onresult = function (event) {
@@ -287,6 +285,10 @@ $(function () {
       return;
     }
 
+    finalTranscript = context[roomId];
+    if (finalTranscript == undefined) {
+      finalTranscript = ''
+    }
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       const transcript = event.results[i][0].transcript;
 
@@ -296,29 +298,14 @@ $(function () {
         interimTranscript += transcript;
       }
     }
-
     finalTranscript = capitalize(finalTranscript);
     final_span.innerHTML = linebreak(finalTranscript);
     interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
-    $resultWrap2.scrollTop = $resultWrap2.scrollHeight;
 
-    userId_f = userId + '_f';
-    userId_i = userId + '_i';
-    context[userId_f] = finalTranscript;
-    context[userId_i] = interimTranscript;
+    context[roomId] = finalTranscript;
+    context[userId] = interimTranscript;
     socket.emit('inu', context);
-    // 여기서 값처리
-    let another = 0;
-    for (var i in users) {
-      if (userId != users[i]) {
-        another = users[i];
-      }
-    }
-    another_f = another + '_f';
-    another_i = another + '_i';
-    final_span2.innerHTML = linebreak(context[another_f]);
-    interim_span2.innerHTML = linebreak(context[another_i]);
 
     console.log('finalTranscript', finalTranscript);
     console.log('interimTranscript', interimTranscript);
@@ -408,8 +395,13 @@ $(function () {
     recognition.start();
     ignoreEndProcess = false;
 
+    save_data = context[roomId];
+    if (save_data == undefined) {
+      save_data = ''
+    }
+
     finalTranscript = '';
-    final_span.innerHTML = '';
+    final_span.innerHTML = linebreak(save_data);
     interim_span.innerHTML = '';
   }
 
@@ -439,7 +431,7 @@ $(function () {
    */
   function initialize() {
     roomId = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
-    userId = Math.round(Math.random() * 99999);
+    userId = prompt('닉네임을 입력해주세요');
     setRoomToken();
     setClipboard();
 
