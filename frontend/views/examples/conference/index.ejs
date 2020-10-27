@@ -57,7 +57,7 @@
   // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
   // the link to your model provided by Teachable Machine export panel
-  const URL = "https://teachablemachine.withgoogle.com/models/vq50X8L-p/";
+  const URL = "./my_model/";
 
   let model, webcam, labelContainer, maxPredictions;
 
@@ -82,9 +82,9 @@
 
     // append elements to the DOM
     labelContainer = document.getElementById("label-container");
-    for (let i = 0; i < maxPredictions; i++) { // and class labels
-      labelContainer.appendChild(document.createElement("div"));
-    }
+    // for (let i = 0; i < maxPredictions; i++) { // and class labels
+    //   labelContainer.appendChild(document.createElement("div"));
+    // }
   }
 
   async function loop() {
@@ -97,10 +97,15 @@
   async function predict() {
     // predict can take in an image, video or canvas html element
     const prediction = await model.predict(webcam.canvas);
-    for (let i = 0; i < maxPredictions; i++) {
-      const classPrediction =
-        prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-      labelContainer.childNodes[i].innerHTML = classPrediction;
+    if (prediction[0].probability > 0.90) {
+      const classPrediction = "O : " + prediction[0].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
+    } else if (prediction[1].probability > 0.90) {
+      const classPrediction = "X : " + prediction[1].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
+    } else {
+      const classPrediction = "No Detection : " + prediction[2].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
     }
   }
 </script>
