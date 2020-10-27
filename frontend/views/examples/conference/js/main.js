@@ -461,6 +461,8 @@ $(function () {
       $this.toggleClass('active');
       mediaHandler[$this.hasClass('active') ? 'muteAudio' : 'unmuteAudio']();
     });
+
+    init();
   }
   /**
    * 초기 바인딩
@@ -486,9 +488,19 @@ $(function () {
 // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
 // the link to your model provided by Teachable Machine export panel
-const URL = "./my_model/";
+let URL = "./basic_model/";
 
 let model, webcam, labelContainer, maxPredictions;
+
+async function change() {
+  if (URL == "./basic_model/") {
+    URL = "./q_model/";
+    init();
+  } else {
+    URL = "./basic_model/";
+    init();
+  }
+}
 
 // Load the image model and setup the webcam
 async function init() {
@@ -526,14 +538,24 @@ async function loop() {
 async function predict() {
   // predict can take in an image, video or canvas html element
   const prediction = await model.predict(webcam.canvas);
-  if (prediction[0].probability > 0.90) {
-    const classPrediction = "O : " + prediction[0].probability.toFixed(2);
-    labelContainer.innerHTML = classPrediction;
-  } else if (prediction[1].probability > 0.90) {
-    const classPrediction = "X : " + prediction[1].probability.toFixed(2);
-    labelContainer.innerHTML = classPrediction;
+  if (URL == "./q_model/") {
+    if (prediction[0].probability > 0.90) {
+      const classPrediction = "-quiz-<br>" + "O : " + prediction[0].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
+    } else if (prediction[1].probability > 0.90) {
+      const classPrediction = "-quiz-<br>" + "X : " + prediction[1].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
+    } else {
+      const classPrediction = "-quiz-<br>" + "No Detection : " + prediction[2].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
+    }
   } else {
-    const classPrediction = "No Detection : " + prediction[2].probability.toFixed(2);
-    labelContainer.innerHTML = classPrediction;
+    if (prediction[0].probability > prediction[1].probability) {
+      const classPrediction = "-basic-<br>" + "No Detection : " + prediction[0].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
+    } else {
+      const classPrediction = "-basic-<br>" + "Hans-up : " + prediction[1].probability.toFixed(2);
+      labelContainer.innerHTML = classPrediction;
+    }
   }
 }
