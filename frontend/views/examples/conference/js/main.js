@@ -13,6 +13,7 @@ $(function () {
   let isOffer;
   let users = [];
   let context = {};
+  let today = new Date();
 
   const socket = io();
   const mediaHandler = new MediaHandler();
@@ -294,7 +295,7 @@ $(function () {
       const transcript = event.results[i][0].transcript;
 
       if (event.results[i].isFinal) {
-        finalTranscript += '[' + userId + "] " + transcript + '\n';
+        finalTranscript += "<div>" + "<p>" + '[' + userId + "] " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
       } else {
         interimTranscript += transcript;
       }
