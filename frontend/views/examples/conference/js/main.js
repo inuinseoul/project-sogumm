@@ -464,6 +464,41 @@ $(function () {
 
     init();
   }
+
+  //워드 다운로드
+  $('#btn-doc').click(function(){
+    var header = "<html>"+
+            "<head><meta charset='utf-8'></head><body>";
+    var footer = "</body></html>";
+    var sourceHTML = header+String(finalTranscript)+footer;
+    console.log(document.getElementById("final_span").value)
+
+    var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+    var fileDownload = document.createElement("a");
+    document.body.appendChild(fileDownload);
+    fileDownload.href = source;
+    fileDownload.download = 'sogumm.doc';
+    fileDownload.click();
+    document.body.removeChild(fileDownload);
+  })
+
+  //한글 다운로드
+  $('#btn-hwp').click(function(){
+    var header = "<html>"+
+            "<head><meta charset='utf-8'></head><body>";
+    var footer = "</body></html>";
+    var sourceHTML = header+String(finalTranscript)+footer;
+    console.log(document.getElementById("final_span").value)
+
+    var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+    var fileDownload = document.createElement("a");
+    document.body.appendChild(fileDownload);
+    fileDownload.href = source;
+    fileDownload.download = 'sogumm.hwp';
+    fileDownload.click();
+    document.body.removeChild(fileDownload);
+  })
+  
   /**
    * 초기 바인딩
    */
