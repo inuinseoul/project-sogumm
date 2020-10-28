@@ -39,17 +39,27 @@
       <button id="btn-hwp">한글(.hwp) 다운로드</button>
       <button id="btn-doc">워드(.doc) 다운로드</button>
     </div>
-    <audio id="audio" src="audio/ending.mp3"></audio>
-    <!-- 
-		<div>
-		  <button onclick="document.getElementById('audio').play()">Play the Audio</button>
-		  <button onclick="document.getElementById('audio').pause()">Pause the Audio</button>
-		  <button onclick="document.getElementById('audio').volume+=0.2">Increase Volume</button>
-		  <button onclick="document.getElementById('audio').volume-=0.2">Decrease Volume</button>
-		</div>
-		-->
+    
+    <div class="wrapper">
+      <header>
+        <h1>Voice-change-O-matic</h1>
+      </header>
+      <canvas class="visualizer" width="640" height="100"></canvas> 
+
+      <form class="controls">
+        <div>
+          <label for="visual">Visualizer setting</label>
+          <select id="visual" name="visual">
+            <option value="sinewave">Sinewave</option>
+            <option value="frequencybars" selected>Frequency bars</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 <script src="js/modules/peer-handler.js"></script>
