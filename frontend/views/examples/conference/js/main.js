@@ -471,7 +471,6 @@ $(function () {
             "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
     var sourceHTML = header+String(finalTranscript)+footer;
-    console.log(document.getElementById("final_span").value)
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");
@@ -488,7 +487,6 @@ $(function () {
             "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
     var sourceHTML = header+String(finalTranscript)+footer;
-    console.log(document.getElementById("final_span").value)
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");
