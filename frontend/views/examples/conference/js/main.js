@@ -595,12 +595,12 @@ async function predict() {
 
 let heading = document.querySelector('h1');
 heading.textContent = 'CLICK ANYWHERE TO START'
-document.body.addEventListener('click', init);
+document.body.addEventListener('click', init2);
 
 
-function init() {
+function init2() {
   heading.textContent = 'Voice-change-O-matic';
-  document.body.removeEventListener('click', init)
+  document.body.removeEventListener('click', init2);
 
   // Older browsers might not implement mediaDevices at all, so we set an empty object first
   if (navigator.mediaDevices === undefined) {
@@ -758,7 +758,7 @@ function init() {
         analyser.getByteTimeDomainData(dataArray); // 시간기반의 데이터를 Unit8Array배열로 전달
 
 
-        canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+        canvasCtx.fillStyle = 'rgb(245, 245, 245)';
         canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
         canvasCtx.lineWidth = 2;
@@ -802,7 +802,7 @@ function init() {
 
         analyser.getByteFrequencyData(dataArrayAlt);
 
-        canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+        canvasCtx.fillStyle = 'rgb(245, 245, 245)';
         canvasCtx.fillRect(0, 0, WIDTH, HEIGHT); // 사각형 모양
 
         var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
@@ -811,11 +811,14 @@ function init() {
 
         for(var i = 0; i < bufferLengthAlt; i++) {
           barHeight = dataArrayAlt[i]; // 큰 숫자 barheight 
+          if (barHeight > 50) {
+            canvasCtx.fillStyle = 'rgb(255,0,0)';
+            // $resultWrap.className = 'red';
+          }
 
-          canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
+          // canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
           canvasCtx.fillRect(x,HEIGHT-barHeight/2,barWidth,barHeight/2); // 내부 사각형
-          // canvasCtx.fillRect(x,HEIGHT-barHeight/2,barWidth,barHeight/2); // 내부 사각형
-
+          
           x += barWidth + 1; // 작은 barwidth에 1씩 증가
         }
       };
