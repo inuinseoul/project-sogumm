@@ -1,21 +1,24 @@
 /*!
  *
- * WebRTC Lab
- * @author dodortus (dodortus@gmail.com / codejs.co.kr)
+ * 후동이 소금구이
+ * 박인우, 이형석, 김주영, 이소현
  *
  */
+
+let big = 0;
+let context = {};
+const socket = io();
+let userId;
+let remoteUserId;
+let users = [];
+
 $(function () {
   console.log('Loaded Main');
 
   let roomId;
-  let userId;
-  let remoteUserId;
   let isOffer;
-  let users = [];
-  let context = {};
   let today = new Date();
 
-  const socket = io();
   const mediaHandler = new MediaHandler();
   const peerHandler = new PeerHandler({
     send: send,
@@ -266,13 +269,6 @@ $(function () {
     for (var key in data) {
       context[key] = data[key];
     }
-
-    let another = 0;
-    for (var i in users) {
-      if (userId != users[i]) {
-        another = users[i];
-      }
-    }
     final_span.innerHTML = linebreak(context[roomId]);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
@@ -295,7 +291,12 @@ $(function () {
       const transcript = event.results[i][0].transcript;
 
       if (event.results[i].isFinal) {
-        finalTranscript += "<div>" + "<p>" + '[' + userId + "] " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
+        if (big) {
+          finalTranscript += "<div>" + "<p style=font-size:30px;>" + '[' + userId + "] " + transcript + "</p>" + "<p style=font-size:20px;>" + today.toLocaleTimeString() + "</p>" + "</div>";
+          big = 0;
+        } else {
+          finalTranscript += "<div>" + "<p style=font-size:20px;>" + '[' + userId + "] " + transcript + "</p>" + "<p style=font-size:20px;>" + today.toLocaleTimeString() + "</p>" + "</div>";
+        }
       } else {
         interimTranscript += transcript;
       }
@@ -364,6 +365,12 @@ $(function () {
       $audio.volume -= 0.2;
     } else if (string.endsWith('스피치') || string.endsWith('말해줘') || string.endsWith('말 해 줘')) {
       textToSpeech($('#final_span').text() || '전 음성 인식된 글자를 읽습니다.');
+    } else if (string.endsWith('OX 퀴즈 시작')) {
+      URL = "./q_model/";
+      init();
+    } else if (string.endsWith('OX 퀴즈 종료')) {
+      URL = "./basic_model/";
+      init();
     }
   }
 
@@ -372,7 +379,7 @@ $(function () {
    * @param {string} s
    */
   function linebreak(s) {
-    return s.replace(TWO_LINE, '<p></p>').replace(ONE_LINE, '<br>');
+    return s;
   }
 
   /**
@@ -466,11 +473,11 @@ $(function () {
   }
 
   //워드 다운로드
-  $('#btn-doc').click(function(){
-    var header = "<html>"+
-            "<head><meta charset='utf-8'></head><body>";
+  $('#btn-doc').click(function () {
+    var header = "<html>" +
+      "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
-    var sourceHTML = header+String(finalTranscript)+footer;
+    var sourceHTML = header + String(finalTranscript) + footer;
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");
@@ -482,11 +489,11 @@ $(function () {
   })
 
   //한글 다운로드
-  $('#btn-hwp').click(function(){
-    var header = "<html>"+
-            "<head><meta charset='utf-8'></head><body>";
+  $('#btn-hwp').click(function () {
+    var header = "<html>" +
+      "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
-    var sourceHTML = header+String(finalTranscript)+footer;
+    var sourceHTML = header + String(finalTranscript) + footer;
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");
@@ -496,7 +503,7 @@ $(function () {
     fileDownload.click();
     document.body.removeChild(fileDownload);
   })
-  
+
   /**
    * 초기 바인딩
    */
@@ -514,6 +521,7 @@ $(function () {
 
   initialize();
   initialize2();
+  init2();
 });
 
 // 모션인식 관련 코드
@@ -524,16 +532,6 @@ $(function () {
 let URL = "./basic_model/";
 
 let model, webcam, labelContainer, maxPredictions;
-
-async function change() {
-  if (URL == "./basic_model/") {
-    URL = "./q_model/";
-    init();
-  } else {
-    URL = "./basic_model/";
-    init();
-  }
-}
 
 // Load the image model and setup the webcam
 async function init() {
@@ -555,7 +553,6 @@ async function init() {
   window.requestAnimationFrame(loop);
 
   // append elements to the DOM
-  labelContainer = document.getElementById("label-container");
   // for (let i = 0; i < maxPredictions; i++) { // and class labels
   //   labelContainer.appendChild(document.createElement("div"));
   // }
@@ -571,24 +568,181 @@ async function loop() {
 async function predict() {
   // predict can take in an image, video or canvas html element
   const prediction = await model.predict(webcam.canvas);
+  let classPrediction = "";
   if (URL == "./q_model/") {
     if (prediction[0].probability > 0.90) {
-      const classPrediction = "-quiz-<br>" + "O : " + prediction[0].probability.toFixed(2);
-      labelContainer.innerHTML = classPrediction;
+      classPrediction = "-quiz-<br>" + "O : " + prediction[0].probability.toFixed(2);
+      label_container.innerHTML = classPrediction;
     } else if (prediction[1].probability > 0.90) {
-      const classPrediction = "-quiz-<br>" + "X : " + prediction[1].probability.toFixed(2);
-      labelContainer.innerHTML = classPrediction;
+      classPrediction = "-quiz-<br>" + "X : " + prediction[1].probability.toFixed(2);
+      label_container.innerHTML = classPrediction;
     } else {
-      const classPrediction = "-quiz-<br>" + "No Detection : " + prediction[2].probability.toFixed(2);
-      labelContainer.innerHTML = classPrediction;
+      classPrediction = "-quiz-<br>" + "No Detection : " + prediction[2].probability.toFixed(2);
+      label_container.innerHTML = classPrediction;
     }
   } else {
     if (prediction[0].probability > prediction[1].probability) {
-      const classPrediction = "-basic-<br>" + "No Detection : " + prediction[0].probability.toFixed(2);
-      labelContainer.innerHTML = classPrediction;
+      classPrediction = "-basic-<br>" + "No Detection : " + prediction[0].probability.toFixed(2);
+      label_container.innerHTML = classPrediction;
     } else {
-      const classPrediction = "-basic-<br>" + "Hans-up : " + prediction[1].probability.toFixed(2);
-      labelContainer.innerHTML = classPrediction;
+      classPrediction = "-basic-<br>" + "Hans-up : " + prediction[1].probability.toFixed(2);
+      label_container.innerHTML = classPrediction;
     }
+  }
+  userId_p = userId + "_p";
+  context[userId_p] = classPrediction;
+  socket.emit('sendScript', context);
+  remoteUserId_p = remoteUserId + "_p";
+  quiz_state.innerHTML = context[remoteUserId_p];
+}
+
+// 볼륨 관련 코드
+
+function init2() {
+
+  if (navigator.mediaDevices === undefined) {
+    navigator.mediaDevices = {};
+  }
+
+  if (navigator.mediaDevices.getUserMedia === undefined) {
+    navigator.mediaDevices.getUserMedia = function (constraints) {
+
+      // First get ahold of the legacy getUserMedia, if present
+      var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+      // Some browsers just don't implement it - return a rejected promise with an error
+      // to keep a consistent interface
+      if (!getUserMedia) {
+        return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+      }
+
+      // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+      return new Promise(function (resolve, reject) {
+        getUserMedia.call(navigator, constraints, resolve, reject);
+      });
+    }
+  }
+
+  // set up forked web audio context, for multiple browsers
+  // window. is needed otherwise Safari explodes
+
+  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  var voiceSelect = document.getElementById("voice");
+  var source;
+  var stream;
+
+  //set up the different audio nodes we will use for the app
+
+  var analyser = audioCtx.createAnalyser();
+  analyser.minDecibels = -90;
+  analyser.maxDecibels = 0;
+  analyser.smoothingTimeConstant = 0.85;
+
+  var distortion = audioCtx.createWaveShaper();
+  var gainNode = audioCtx.createGain();
+  var biquadFilter = audioCtx.createBiquadFilter();
+  var convolver = audioCtx.createConvolver();
+
+  // grab audio track via XHR for convolver node
+
+  var soundSource;
+
+  ajaxRequest = new XMLHttpRequest();
+
+  ajaxRequest.open('GET', 'https://mdn.github.io/voice-change-o-matic/audio/concert-crowd.ogg', true);
+
+  ajaxRequest.responseType = 'arraybuffer';
+
+
+  ajaxRequest.onload = function () {
+    var audioData = ajaxRequest.response;
+
+    audioCtx.decodeAudioData(audioData, function (buffer) {
+      soundSource = audioCtx.createBufferSource();
+      convolver.buffer = buffer;
+    }, function (e) { console.log("Error with decoding audio data" + e.err); });
+
+  };
+
+  ajaxRequest.send();
+
+  // set up canvas context for visualizer
+
+  var canvas = document.querySelector('.visualizer');
+  var canvasCtx = canvas.getContext("2d");
+
+  var intendedWidth = document.querySelector('.wrapper').clientWidth;
+
+  canvas.setAttribute('width', intendedWidth);
+
+  var visualSelect = document.getElementById("visual");
+
+  var drawVisual;
+
+  //main block for doing the audio recording
+
+  if (navigator.mediaDevices.getUserMedia) {
+    console.log('getUserMedia supported.');
+    var constraints = { audio: true }
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(
+        function (stream) {
+          source = audioCtx.createMediaStreamSource(stream);
+          source.connect(distortion);
+          distortion.connect(biquadFilter);
+          biquadFilter.connect(gainNode);
+          convolver.connect(gainNode);
+          gainNode.connect(analyser);
+
+          visualize();
+        })
+      .catch(function (err) { console.log('The following gUM error occured: ' + err); })
+  } else {
+    console.log('getUserMedia not supported on your browser!');
+  }
+
+  function visualize() {
+    WIDTH = canvas.width;
+    HEIGHT = canvas.height;
+
+    var visualSetting = visualSelect.value;
+    console.log(visualSetting);
+    analyser.fftSize = 256;
+    var bufferLengthAlt = analyser.frequencyBinCount; //시각화를 하기 위한 데이터의 갯수, 푸리에변환 절반
+    console.log(bufferLengthAlt);
+    var dataArrayAlt = new Uint8Array(bufferLengthAlt);//데이터를 담을 bufferLength 크기의 Unit8Array의 배열을 생성
+
+    var drawAlt = function () {
+      drawVisual = requestAnimationFrame(drawAlt);
+
+      analyser.getByteFrequencyData(dataArrayAlt);
+
+      var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
+      var barHeight;
+      var x = 0;
+      var sum_height = 0;
+      for (var key in dataArrayAlt) {
+        sum_height += dataArrayAlt[key];
+      }
+      if (sum_height > 1600) {
+        big = 1;
+      }
+      for (var i = 0; i < bufferLengthAlt; i++) {
+        barHeight = dataArrayAlt[i]; // 큰 숫자 barheight       
+        // if (barHeight > 150) {
+        //   console.log(barHeight)
+        // }
+        x += barWidth + 1; // 작은 barwidth에 1씩 증가        
+      }
+    };
+
+    drawAlt();
+  }
+
+  // event listeners to change visualize and voice settings
+
+  visualSelect.onchange = function () {
+    window.cancelAnimationFrame(drawVisual);
+    visualize();
   }
 }

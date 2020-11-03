@@ -1,11 +1,11 @@
 /*!
  *
- * WebRTC Lab
- * @author dodortus (dodortus@gmail.com)
- * @homepage codejs.co.kr
+ * 후동이 소금구이
+ * 박인우, 이형석, 김주영, 이소현
+ * 
  */
 
-$(function() {
+$(function () {
   const browserVersion = DetectRTC.browser.version;
   const isFirefox = DetectRTC.browser.isFirefox;
   const isChrome = DetectRTC.browser.isChrome;
@@ -46,7 +46,7 @@ $(function() {
     }
 
     // 캠 체크, 체크 텀이 필요함
-    setTimeout(function() {
+    setTimeout(function () {
       if (checkPage && !DetectRTC.hasWebcam) {
         showNeedCamMessage();
       }
