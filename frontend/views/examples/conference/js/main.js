@@ -620,7 +620,6 @@ async function predict() {
 
 let heading = document.querySelector('h1');
 
-
 function init2() {
 
   // Older browsers might not implement mediaDevices at all, so we set an empty object first
@@ -760,98 +759,48 @@ function init2() {
     WIDTH = canvas.width;
     HEIGHT = canvas.height;
 
-
     var visualSetting = visualSelect.value;
     console.log(visualSetting);
+    analyser.fftSize = 256;
+    var bufferLengthAlt = analyser.frequencyBinCount; //시각화를 하기 위한 데이터의 갯수, 푸리에변환 절반
+    console.log(bufferLengthAlt);
+    var dataArrayAlt = new Uint8Array(bufferLengthAlt);//데이터를 담을 bufferLength 크기의 Unit8Array의 배열을 생성
 
-    if (visualSetting === "sinewave") {
-      analyser.fftSize = 2048;
-      var bufferLength = analyser.fftSize;
-      console.log(bufferLength);
-      var dataArray = new Uint8Array(bufferLength);
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-      canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    var drawAlt = function () {
+      drawVisual = requestAnimationFrame(drawAlt);
 
-      var draw = function () {
+      analyser.getByteFrequencyData(dataArrayAlt);
 
-        drawVisual = requestAnimationFrame(draw);
+      canvasCtx.fillStyle = 'rgb(245, 245, 245)';
+      canvasCtx.fillRect(0, 0, WIDTH, HEIGHT); // 사각형 모양
 
-        analyser.getByteTimeDomainData(dataArray); // 시간기반의 데이터를 Unit8Array배열로 전달
+      var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
+      var barHeight;
+      var x = 0;
+      var sum_height = 0;
+      for (var key in dataArrayAlt) {
+        sum_height += dataArrayAlt[key];
+      }
+      if (sum_height > 1600) {
+        big = 1;
+      }
+      for (var i = 0; i < bufferLengthAlt; i++) {
+        barHeight = dataArrayAlt[i]; // 큰 숫자 barheight         
+        // if (barHeight > 200) {
+        //   big = 1;
+        //   // canvasCtx.fillStyle = 'rgb(255,0,0)';
+        //   // $resultWrap.className = 'red';
+        // }
+        canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+        canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2); // 내부 사각형
 
+        x += barWidth + 1; // 작은 barwidth에 1씩 증가        
+      }
+    };
 
-        canvasCtx.fillStyle = 'rgb(245, 245, 245)';
-        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-        canvasCtx.lineWidth = 2;
-        canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-
-        canvasCtx.beginPath();
-
-        var sliceWidth = WIDTH * 1.0 / bufferLength;
-        var x = 0;
-
-        for (var i = 0; i < bufferLength; i++) {
-
-          var v = dataArray[i] / 128.0;
-          var y = v * HEIGHT / 2;
-
-          if (i === 0) {
-            canvasCtx.moveTo(x, y);
-          } else {
-            canvasCtx.lineTo(x, y);
-          }
-
-          x += sliceWidth;
-        }
-
-        canvasCtx.lineTo(canvas.width, canvas.height / 2);
-        canvasCtx.stroke();
-      };
-
-      draw();
-
-    } else if (visualSetting == "frequencybars") {
-      analyser.fftSize = 256;
-      var bufferLengthAlt = analyser.frequencyBinCount; //시각화를 하기 위한 데이터의 갯수, 푸리에변환 절반
-      console.log(bufferLengthAlt);
-      var dataArrayAlt = new Uint8Array(bufferLengthAlt);//데이터를 담을 bufferLength 크기의 Unit8Array의 배열을 생성
-
-      canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-      var drawAlt = function () {
-        drawVisual = requestAnimationFrame(drawAlt);
-
-        analyser.getByteFrequencyData(dataArrayAlt);
-
-        canvasCtx.fillStyle = 'rgb(245, 245, 245)';
-        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT); // 사각형 모양
-
-        var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
-        var barHeight;
-        var x = 0;
-
-        for (var i = 0; i < bufferLengthAlt; i++) {
-          barHeight = dataArrayAlt[i]; // 큰 숫자 barheight 
-          if (barHeight > 200) {
-            big = 1;
-            // canvasCtx.fillStyle = 'rgb(255,0,0)';
-            // $resultWrap.className = 'red';
-          }
-          canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-          canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2); // 내부 사각형
-
-          x += barWidth + 1; // 작은 barwidth에 1씩 증가
-        }
-      };
-
-      drawAlt();
-
-    } else if (visualSetting == "off") {
-      canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-      canvasCtx.fillStyle = "red";
-      canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-    }
-
+    drawAlt();
   }
 
   // function voiceChange() {
