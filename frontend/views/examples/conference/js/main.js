@@ -372,6 +372,12 @@ $(function () {
       $audio.volume -= 0.2;
     } else if (string.endsWith('스피치') || string.endsWith('말해줘') || string.endsWith('말 해 줘')) {
       textToSpeech($('#final_span').text() || '전 음성 인식된 글자를 읽습니다.');
+    } else if (string.endsWith('OX 퀴즈')) {
+      URL = "./q_model/";
+      init();
+    } else if (string.endsWith('종료')) {
+      URL = "./basic_model/";
+      init();
     }
   }
 
@@ -533,18 +539,6 @@ $(function () {
 let URL = "./basic_model/";
 
 let model, webcam, labelContainer, maxPredictions;
-
-async function quiz() {
-  if (URL == "./basic_model/") {
-    URL = "./q_model/";
-    init();
-    quiz_btn.innerText = "End";
-  } else {
-    URL = "./basic_model/";
-    init();
-    quiz_btn.innerText = "Quiz";
-  }
-}
 
 // Load the image model and setup the webcam
 async function init() {
