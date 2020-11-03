@@ -9,13 +9,13 @@ let big = 0;
 let context = {};
 const socket = io();
 let userId;
+let remoteUserId;
 let users = [];
 
 $(function () {
   console.log('Loaded Main');
 
   let roomId;
-  let remoteUserId;
   let isOffer;
   let today = new Date();
 
@@ -269,13 +269,6 @@ $(function () {
     for (var key in data) {
       context[key] = data[key];
     }
-
-    let another = 0;
-    for (var i in users) {
-      if (userId != users[i]) {
-        another = users[i];
-      }
-    }
     final_span.innerHTML = linebreak(context[roomId]);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
@@ -372,10 +365,10 @@ $(function () {
       $audio.volume -= 0.2;
     } else if (string.endsWith('스피치') || string.endsWith('말해줘') || string.endsWith('말 해 줘')) {
       textToSpeech($('#final_span').text() || '전 음성 인식된 글자를 읽습니다.');
-    } else if (string.endsWith('OX 퀴즈')) {
+    } else if (string.endsWith('OX 퀴즈 시작')) {
       URL = "./q_model/";
       init();
-    } else if (string.endsWith('종료')) {
+    } else if (string.endsWith('OX 퀴즈 종료')) {
       URL = "./basic_model/";
       init();
     }
@@ -560,7 +553,6 @@ async function init() {
   window.requestAnimationFrame(loop);
 
   // append elements to the DOM
-  labelContainer = document.getElementById("label_container");
   // for (let i = 0; i < maxPredictions; i++) { // and class labels
   //   labelContainer.appendChild(document.createElement("div"));
   // }
@@ -600,14 +592,8 @@ async function predict() {
   userId_p = userId + "_p";
   context[userId_p] = classPrediction;
   socket.emit('sendScript', context);
-  let another = 0;
-  for (var i in users) {
-    if (userId != users[i]) {
-      another = users[i];
-    }
-  }
-  another_p = another + "_p";
-  quiz_state.innerHTML = context[another_p];
+  remoteUserId_p = remoteUserId + "_p";
+  quiz_state.innerHTML = context[remoteUserId_p];
 }
 
 // 볼륨 관련 코드
@@ -706,7 +692,7 @@ function init2() {
           distortion.connect(biquadFilter);
           biquadFilter.connect(gainNode);
           convolver.connect(gainNode);
-          gainNode.connect(analyser); 
+          gainNode.connect(analyser);
 
           visualize();
         })
