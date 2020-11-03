@@ -612,19 +612,12 @@ async function predict() {
 
 // 볼륨 관련 코드
 
-let heading = document.querySelector('h1');
-
 function init2() {
 
-  // Older browsers might not implement mediaDevices at all, so we set an empty object first
   if (navigator.mediaDevices === undefined) {
     navigator.mediaDevices = {};
   }
 
-
-  // Some browsers partially implement mediaDevices. We can't just assign an object
-  // with getUserMedia as it would overwrite existing properties.
-  // Here, we will just add the getUserMedia property if it's missing.
   if (navigator.mediaDevices.getUserMedia === undefined) {
     navigator.mediaDevices.getUserMedia = function (constraints) {
 
@@ -644,8 +637,6 @@ function init2() {
     }
   }
 
-
-
   // set up forked web audio context, for multiple browsers
   // window. is needed otherwise Safari explodes
 
@@ -654,38 +645,17 @@ function init2() {
   var source;
   var stream;
 
-  // grab the mute button to use below
-
-  var mute = document.querySelector('.mute');
-
   //set up the different audio nodes we will use for the app
 
   var analyser = audioCtx.createAnalyser();
   analyser.minDecibels = -90;
-  analyser.maxDecibels = -10;
+  analyser.maxDecibels = 0;
   analyser.smoothingTimeConstant = 0.85;
 
   var distortion = audioCtx.createWaveShaper();
   var gainNode = audioCtx.createGain();
   var biquadFilter = audioCtx.createBiquadFilter();
   var convolver = audioCtx.createConvolver();
-
-  // distortion curve for the waveshaper, thanks to Kevin Ennis
-  // http://stackoverflow.com/questions/22312841/waveshaper-node-in-webaudio-how-to-emulate-distortion
-
-  function makeDistortionCurve(amount) {
-    var k = typeof amount === 'number' ? amount : 50,
-      n_samples = 44100,
-      curve = new Float32Array(n_samples),
-      deg = Math.PI / 180,
-      i = 0,
-      x;
-    for (; i < n_samples; ++i) {
-      x = i * 2 / n_samples - 1;
-      curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
-    }
-    return curve;
-  };
 
   // grab audio track via XHR for convolver node
 
@@ -706,9 +676,6 @@ function init2() {
       convolver.buffer = buffer;
     }, function (e) { console.log("Error with decoding audio data" + e.err); });
 
-    //soundSource.connect(audioCtx.destination);
-    //soundSource.loop = true;
-    //soundSource.start();
   };
 
   ajaxRequest.send();
@@ -739,10 +706,9 @@ function init2() {
           distortion.connect(biquadFilter);
           biquadFilter.connect(gainNode);
           convolver.connect(gainNode);
-          gainNode.connect(analyser); // 소리 출력 안되게?!
+          gainNode.connect(analyser); 
 
           visualize();
-          voiceChange();
         })
       .catch(function (err) { console.log('The following gUM error occured: ' + err); })
   } else {
@@ -760,15 +726,10 @@ function init2() {
     console.log(bufferLengthAlt);
     var dataArrayAlt = new Uint8Array(bufferLengthAlt);//데이터를 담을 bufferLength 크기의 Unit8Array의 배열을 생성
 
-    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
     var drawAlt = function () {
       drawVisual = requestAnimationFrame(drawAlt);
 
       analyser.getByteFrequencyData(dataArrayAlt);
-
-      canvasCtx.fillStyle = 'rgb(245, 245, 245)';
-      canvasCtx.fillRect(0, 0, WIDTH, HEIGHT); // 사각형 모양
 
       var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
       var barHeight;
@@ -781,15 +742,10 @@ function init2() {
         big = 1;
       }
       for (var i = 0; i < bufferLengthAlt; i++) {
-        barHeight = dataArrayAlt[i]; // 큰 숫자 barheight         
-        // if (barHeight > 200) {
-        //   big = 1;
-        //   // canvasCtx.fillStyle = 'rgb(255,0,0)';
-        //   // $resultWrap.className = 'red';
+        barHeight = dataArrayAlt[i]; // 큰 숫자 barheight       
+        // if (barHeight > 150) {
+        //   console.log(barHeight)
         // }
-        canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-        canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2); // 내부 사각형
-
         x += barWidth + 1; // 작은 barwidth에 1씩 증가        
       }
     };
@@ -797,52 +753,10 @@ function init2() {
     drawAlt();
   }
 
-  // function voiceChange() {
-
-  //   distortion.oversample = '4x';
-  //   biquadFilter.gain.setTargetAtTime(0, audioCtx.currentTime, 0)
-
-  //   var voiceSetting = voiceSelect.value;
-  //   console.log(voiceSetting);
-
-  //   //when convolver is selected it is connected back into the audio path
-  //   if(voiceSetting == "convolver") {
-  //     biquadFilter.disconnect(0);
-  //     biquadFilter.connect(convolver);
-  //   } else {
-  //     biquadFilter.disconnect(0);
-  //     biquadFilter.connect(gainNode);
-
-  //     if(voiceSetting == "distortion") {
-  //       distortion.curve = makeDistortionCurve(400);
-  //     } else if(voiceSetting == "biquad") {
-  //       biquadFilter.type = "lowshelf";
-  //       biquadFilter.frequency.setTargetAtTime(1000, audioCtx.currentTime, 0)
-  //       biquadFilter.gain.setTargetAtTime(25, audioCtx.currentTime, 0)
-  //     } else if(voiceSetting == "off") {
-  //       console.log("Voice settings turned off");
-  //     }
-  //   }
-  // }
-
-  // // event listeners to change visualize and voice settings
+  // event listeners to change visualize and voice settings
 
   visualSelect.onchange = function () {
     window.cancelAnimationFrame(drawVisual);
     visualize();
-  };
-
-  mute.onclick = voiceMute;
-
-  function voiceMute() {
-    if (mute.id === "") {
-      gainNode.gain.value = 0;
-      mute.id = "activated";
-      mute.innerHTML = "Unmute";
-    } else {
-      gainNode.gain.value = 1;
-      mute.id = "";
-      mute.innerHTML = "Mute";
-    }
   }
 }
