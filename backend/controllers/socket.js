@@ -8,6 +8,7 @@ module.exports = (http) => {
   let roomId = null;
   let socketIds = {};
   let context = {};
+  let answers = {};
 
   /**
    * SocketId로 방을 탐색 합니다.

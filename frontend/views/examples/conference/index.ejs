@@ -23,8 +23,9 @@
   <span id="icon-music">♬</span>
 
   <div class="wrap">
-    <button type="button" onclick="change()">Change</button>
-    <div id="label-container"></div>
+    <button id="quiz_btn" type="button" onclick="quiz()">Quiz</button>
+    <div id="label_container"></div>
+    <div id="quiz_state"></div>
     <div class="buttons">
       <button id="btn-camera">Camera Pause</button>
       <button id="btn-mic" class="on">Mic</button>
@@ -34,7 +35,6 @@
       <span class="final" id="final_span"></span>
       <span class="interim" id="interim_span"></span>
     </div>
-    <div id="label-container"></div>
     <div class="buttons">
       <button id="btn-hwp">한글(.hwp) 다운로드</button>
       <button id="btn-doc">워드(.doc) 다운로드</button>
@@ -47,7 +47,21 @@
 		  <button onclick="document.getElementById('audio').volume+=0.2">Increase Volume</button>
 		  <button onclick="document.getElementById('audio').volume-=0.2">Decrease Volume</button>
 		</div>
-		-->
+    -->
+    <div class="wrapper">
+      <canvas class="visualizer" width="640" height="100"></canvas>
+
+      <form class="controls">
+        <div>
+          <label for="visual">Visualizer setting</label>
+          <select id="visual" name="visual">
+            <option value="sinewave">Sinewave</option>
+            <option value="frequencybars" selected>Frequency bars</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 

@@ -1,7 +1,7 @@
 /*!
  *
- * WebRTC Lab
- * @author dodortus (dodortus@gmail.com / codejs.co.kr)
+ * 후동이 소금구이
+ * 박인우, 이형석, 김주영, 이소현
  *
  */
 const config = require('./config.json');
