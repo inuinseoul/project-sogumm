@@ -8,6 +8,7 @@ module.exports = (http) => {
   let roomId = null;
   let socketIds = {};
   let context = {};
+  let allquiz = {};
   let answers = {};
 
   /**
@@ -95,6 +96,20 @@ module.exports = (http) => {
         context[key] = data[key];
       }
       io.emit('getScript', context);
+    });
+
+    socket.on('sendQuiz', (data) => {
+      for (var key in data) {
+        allquiz[key] = data[key];
+      }
+      io.emit('getQuiz', allquiz);
+    });
+
+    socket.on('sendAnswer', (data) => {
+      for (var key in data) {
+        answers[key] = data[key];
+      }
+      io.emit('getAnswer', answers);
     });
   });
 
