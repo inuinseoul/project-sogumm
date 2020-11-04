@@ -1,51 +1,195 @@
-<% include ../../partials/header %>
-<link href="css/main.css" rel="stylesheet" type="text/css">
+<!DOCTYPE html>
+<html lang="en">
 
-<div id="content">
-  <div class="wrap">
-    <section id="share-wrap">
-      <a href="#" id="unique-token">Share this room link</a>
-    </section>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOGUMM</title>
+  <meta name="author" content="codeJS" />
+  <meta name="viewport" content="width=1024, initial-scale=1.0" />
 
-    <section id="enter-wrap">
-      <div id="create-wrap">
-        <p>영상회의를 시작하시겠습니까?</p>
-        <button id="btn-start">Start</button>
+  <link href="/img/Sogumm.png" type="image/png" rel="icon" />
+  <script src="/js/lib/inherit.js"></script>
+  <script src="/js/lib/jquery.js"></script>
+  <script src="/js/lib/eventemitter.js"></script>
+  <script src="/js/lib/DetectRTC.js"></script>
+  <script src="/js/utils.js"></script>
+  <link rel='stylesheet' href='./css/meet.css' />
+  <link rel='stylesheet' href='./css/meet_opt.css' />
+  <link rel='stylesheet' href='./css/meet_rwd.css' />
+</head>
+
+<body>
+  <div id="page">
+    <div id="article_wrap">
+      <div id="article_inner">
+        <div id="article_header">
+          <a href='/' class='sg_orange'>
+            <h1>SOGUMM</h1>
+          </a>
+
+          <div class="buttons">
+            <button id="btn-camera">Camera Pause</button>
+            <button id="btn-mic" class="on">Mic</button>
+            <button id="btn-tts">Text to speech</button>
+            <button id="btn-hwp">한글(.hwp) 다운로드</button>
+            <button id="btn-doc">워드(.doc) 다운로드</button>
+          </div>
+        </div>
+
+        <div id="article_contents">
+          <div id="contents_wrap">
+            <p id='contents_footer' style="display: none;">made by '후동이소금구이'</p>
+
+            <div id="contents_viewer">
+              <div id="viewer_blur"></div>
+              <div id="viewer_top">
+                <section id="video-wrap">
+
+                  <!-- <video controls width="100%">
+                                      <source src='../resource/videoplayback.mp4'
+                                              type="video/mp4">
+                                      Sorry, your browser doesn't support embedded videos.
+                                  </video> -->
+
+                </section>
+
+                <section id="enter-wrap">
+                  <div id="create-wrap">
+                    <div id="video_msg">
+                      <p class='sg_black fc-td'>아래 버튼을 눌러<br />온라인 미팅을 시작할 수 있습니다</p>
+                      <p id='btn-start'>START</p>
+                    </div>
+                  </div>
+                  <div id="wait-wrap"></div>
+                </section>
+
+
+                <!-- <div id="video_msg">
+                                  <p>아래 버튼을 눌러<br />온라인 미팅에 참여할 수 있습니다</p>
+                                  <p>INVITE</p>
+                              </div> -->
+                <span class="interim" id="interim_span"></span>
+              </div>
+
+              <div id="viewer_bottom">
+                <div id="contents_motion">
+                  <div id='motion_text'>
+                    <p class='sg_black fc-td'>소금이 당신의<strong>행동</strong>을 분석중이에요..</p>
+                  </div>
+                  <div class='contents_underbar'>
+                  </div>
+                </div>
+                <div id="contents_link">
+                  <a href="#" id="unique-token">
+                    <svg version="1.1" class='icon icon_off' id="layer_4" xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24"
+                      style="enable-background:new 0 0 24 24;" xml:space="preserve">
+                      <style type="text/css">
+                        .st0 {
+                          fill: none;
+                        }
+                      </style>
+                      <path class="st0" d="M0,0h24v24H0V0z" />
+                      <path class="st1" d="M24,6.8c0-0.2-0.1-0.4-0.1-0.4c0,0,0,0,0,0h0c0,0,0,0,0,0l-6.1-6.1c0,0-0.4-0.4-0.8-0.2
+                                              c-0.4,0.1-0.4,0.7-0.4,0.7v2.2v1.3c-0.6,0-5.5-0.3-9,3.3c0,0-3.1,3.2-1.6,8c0.8,2.6,1.3,3,1.7,2.8c0,0,0.3-0.2,0.1-0.7
+                                              c-0.1-0.5-0.6-1.8,0-3.5c0.6-1.7,2.4-4.6,8.8-4.6v0.1v1.4v2.2c0,0,0,0.6,0.4,0.7c0.4,0.1,0.8-0.2,0.8-0.2l0.1-0.1l0,0l6.1-6.1
+                                              c0,0,0.1-0.2,0.1-0.4C24,7.1,24,7,24,7C24,6.9,24,6.8,24,6.8z" />
+                      <path class="st1"
+                        d="M19.6,14.4L19.6,14.4c-0.6,0-1.1,0.5-1.1,1.1v0.4v0.4v3.3c0,1.3-1,2.3-2.3,2.3H4.5c-1.3,0-2.3-1-2.3-2.3V7.7
+                                              c0-1.3,1-2.3,2.3-2.3h1.6h0.6h0.3C7.5,5.4,8,5,8,4.4v0c0-0.6-0.5-1.1-1.1-1.1H6.6H6.1H4.3C1.9,3.3,0,5.2,0,7.6v12.2
+                                              C0,22,1.9,24,4.3,24h12.2c2.3,0,4.3-1.9,4.3-4.3v-3.5v-0.4v-0.4C20.7,14.8,20.2,14.4,19.6,14.4z" />
+                    </svg>
+                  </a>
+                  <div class='contents_underbar'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="nightmode_wrap">
+            <div>
+              <svg version="1.1" class='icon icon_on' id="icon_sun" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 18"
+                style="enable-background:new 0 0 18 18;" xml:space="preserve">
+                <style type="text/css">
+                  .st0 {
+                    fill: none;
+                  }
+                </style>
+                <path class="st0" d="M0,0h18v18H0V0z" />
+                <path class="st1"
+                  d="M4.1,3L3.8,2.7C3.5,2.3,3,2.3,2.7,2.7l0,0C2.3,3,2.3,3.5,2.7,3.8L3,4.1c0.3,0.3,0.8,0.3,1.1,0l0,0
+                                  C4.5,3.8,4.5,3.3,4.1,3z M1.6,8.2H0.8C0.4,8.2,0,8.5,0,9v0c0,0.5,0.4,0.8,0.8,0.8h0.8c0.5,0,0.8-0.4,0.8-0.8v0
+                                  C2.5,8.5,2.1,8.2,1.6,8.2z M9,0L9,0C8.5,0,8.2,0.4,8.2,0.8v0.8c0,0.5,0.4,0.8,0.8,0.8h0c0.5,0,0.8-0.4,0.8-0.8V0.8
+                                  C9.8,0.4,9.5,0,9,0z M15.3,2.7c-0.3-0.3-0.8-0.3-1.2,0L13.9,3c-0.3,0.3-0.3,0.8,0,1.1l0,0c0.3,0.3,0.8,0.3,1.1,0l0.3-0.3
+                                  C15.7,3.5,15.7,3,15.3,2.7z M13.9,15l0.3,0.3c0.3,0.3,0.8,0.3,1.2,0c0.3-0.3,0.3-0.8,0-1.2L15,13.9c-0.3-0.3-0.8-0.3-1.1,0
+                                  C13.5,14.2,13.5,14.7,13.9,15z M15.6,9L15.6,9c0,0.5,0.4,0.8,0.8,0.8h0.8C17.6,9.8,18,9.5,18,9v0c0-0.5-0.4-0.8-0.8-0.8h-0.8
+                                  C15.9,8.2,15.6,8.5,15.6,9z M9,4.1C6.3,4.1,4.1,6.3,4.1,9s2.2,4.9,4.9,4.9s4.9-2.2,4.9-4.9S11.7,4.1,9,4.1z M9,18L9,18
+                                  c0.5,0,0.8-0.4,0.8-0.8v-0.8c0-0.5-0.4-0.8-0.8-0.8h0c-0.5,0-0.8,0.4-0.8,0.8v0.8C8.2,17.6,8.5,18,9,18z M2.7,15.3
+                                  c0.3,0.3,0.8,0.3,1.2,0L4.1,15c0.3-0.3,0.3-0.8,0-1.1l0,0c-0.3-0.3-0.8-0.3-1.2,0l-0.3,0.3C2.3,14.5,2.3,15,2.7,15.3z" />
+              </svg>
+
+              <label class="switch">
+                <input id='switch_checkbox' type="checkbox">
+                <span class="slider"></span>
+              </label>
+
+              <svg version="1.1" class='icon icon_off' id="icon_moon" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 18"
+                style="enable-background:new 0 0 18 18;" xml:space="preserve">
+                <style type="text/css">
+                  .st0 {
+                    fill: none;
+                  }
+                </style>
+                <g>
+                  <rect y="0" class="st0" width="18" height="18" />
+                </g>
+                <g>
+                  <g>
+                    <g>
+                      <path class="st1" d="M9.4,9.1C7.3,5,8.9,1.5,9.9,0C5,0.2,1.2,4.1,1.2,9c0,0.1,0,0.3,0,0.4C1.8,9.1,2.4,9,3,9
+                                              c1.5,0,2.9,0.7,3.7,1.9c1.5,0.4,2.6,1.8,2.6,3.5c0,1.4-0.8,2.5-1.9,3.2c0.9,0.3,1.8,0.4,2.8,0.4c3.1,0,5.9-1.6,7.5-4.1
+                                              C15.6,14.1,11.4,13,9.4,9.1z" />
+                    </g>
+                    <path class="st1" d="M5.7,12.6H5.5c-0.4-1-1.4-1.8-2.5-1.8c-1.5,0-2.7,1.2-2.7,2.7s1.2,2.7,2.7,2.7c0.6,0,2.2,0,2.7,0
+                                          c1,0,1.8-0.8,1.8-1.8S6.7,12.6,5.7,12.6z" />
+                  </g>
+                </g>
+              </svg>
+
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="wait-wrap"></div>
-    </section>
 
-    <section id="video-wrap">
-    </section>
+      <div id="article_side">
+        <div id="result" class="sg_black">
+          <div id='quiz_state'>
+          </div>
+          <span class="final" id="final_span">
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- <p>adsf</p>
+      <p>adsf</p>
+      <p>adsf</p>
+      <p>adsf</p> -->
   </div>
-</div>
-<div id="content">
-  <span id="icon-music">♬</span>
+  <div id="night_filter" class='filter_off'></div>
 
-  <div class="wrap">
-    <div id="label_container"></div>
-    <div id="quiz_state"></div>
-    <div class="buttons">
-      <button id="btn-camera">Camera Pause</button>
-      <button id="btn-mic" class="on">Mic</button>
-      <button id="btn-tts">Text to speech</button>
-    </div>
-    <div id="result" style="overflow-y:scroll;">
-      <span class="final" id="final_span"></span>
-      <span class="interim" id="interim_span"></span>
-    </div>
-    <div class="buttons">
-      <button id="btn-hwp">한글(.hwp) 다운로드</button>
-      <button id="btn-doc">워드(.doc) 다운로드</button>
-    </div>
-    <audio id="audio" src="audio/ending.mp3"></audio>
-  </div>
-</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+  <script src="js/modules/peer-handler.js"></script>
+  <script src="js/modules/media-handler.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+  <script src="js/main.js"></script>
+  <script type="text/javascript" src="./js/meet.js"></script>
+  <script src="/js/lib/highlight.min.js"></script>
+  <script src="/js/base.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
-<script src="js/modules/peer-handler.js"></script>
-<script src="js/modules/media-handler.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-<script src="js/main.js"></script>
-<% include ../../partials/footer %>
+</html>

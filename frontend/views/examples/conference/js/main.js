@@ -383,7 +383,7 @@ $(function () {
       if (URL == "./basic_model/") {
         URL = "./q_model/";
         init();
-        label_container.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
+        motion_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
         let userId_qi = userId + "_qi";
         let userId_qc = userId + "_qc";
         allquiz[userId_qi] = prompt('퀴즈 내용을 입력해주세요');
@@ -401,22 +401,22 @@ $(function () {
         let remoteUserId_p = remoteUserId + "_p";
         if ((allquiz[userId_qc] == 'O') || (allquiz[userId_qc] == 'o') || (allquiz[userId_qc] == 'x')) {
           if (answers[remoteUserId_p] == 'O') {
-            label_container.innerHTML = "상대방이 정답을 맞췄습니다!";
+            motion_text.innerHTML = "상대방이 정답을 맞췄습니다!";
           } else if (answers[remoteUserId_p] == 'X') {
-            label_container.innerHTML = "상대방이 정답을 맞추지 못했네요.";
+            motion_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
           } else {
-            label_container.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+            motion_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
           }
         } else if ((allquiz[userId_qc] == 'X') || (allquiz[userId_qc] == 'x')) {
           if (answers[remoteUserId_p] == 'X') {
-            label_container.innerHTML = "상대방이 정답을 맞췄습니다!";
+            motion_text.innerHTML = "상대방이 정답을 맞췄습니다!";
           } else if (answers[remoteUserId_p] == 'O') {
-            label_container.innerHTML = "상대방이 정답을 맞추지 못했네요.";
+            motion_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
           } else {
-            label_container.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+            motion_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
           }
         } else {
-          label_container.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
+          motion_text.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
         }
       }
     }
