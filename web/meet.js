@@ -9,10 +9,12 @@ function setNightMode(event) {
     var target = document.getElementById('night_filter');
     var sun = document.getElementById('icon_sun');
     var moon = document.getElementById('icon_moon');
+    var chat = document.getElementById('final_span');
 
     if(el.checked) {    // 야간모드 활성화
         changeClass(moon, 'icon_off', 'icon_on');
         changeClass(sun, 'icon_on', 'icon_off');
+        chat.classList.add('filter');
         target.classList.remove('filter_off');
 
         var text = document.getElementsByClassName('sg_black');
@@ -23,6 +25,7 @@ function setNightMode(event) {
     else {              // 야간모드 종료
         changeClass(moon, 'icon_on', 'icon_off');
         changeClass(sun, 'icon_off', 'icon_on');
+        chat.classList.remove('filter');
         target.classList.add('filter_off');
 
         var text = document.getElementsByClassName('sg_white');

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOGUMM</title>
 
-    <link rel='stylesheet' href='./meet_nb.css' />
-    <link rel='stylesheet' href='./meet_option.css' />
-    <link rel='stylesheet' href='./meet_rwd.css' />
+    <link rel='stylesheet' href='./css/meet.css' />
+    <link rel='stylesheet' href='./css/meet_opt.css' />
+    <link rel='stylesheet' href='./css/meet_rwd.css' />
 </head>
 <body>
     <div id="page">
@@ -92,10 +92,10 @@
         
                 <div id="article_contents">
                     <div id="contents_wrap">
-                        <p id='contents_footer'>우리 팀을 널리널리 자랑할 수 있는 문구</p>
+                        <p id='contents_footer' style="display: none;">made by '후동이소금구이'</p>
                         
                         <div id="contents_viewer">
-                            <div id="filter"></div>
+                            <div id="viewer_blur"></div>
                             <div id="viewer_top">
                                 <section id="video-wrap">
     
@@ -108,19 +108,20 @@
                                 </section>
     
                                 <div id="video_msg">
-                                    <p class='sg_black'>아래 버튼을 눌러<br />온라인 미팅을 시작할 수 있습니다</p>
+                                    <p class='sg_black fc-td'>아래 버튼을 눌러<br />온라인 미팅을 시작할 수 있습니다</p>
                                     <p id='btn-start'>START</p>
                                 </div>
                                 <!-- <div id="video_msg">
                                     <p>아래 버튼을 눌러<br />온라인 미팅에 참여할 수 있습니다</p>
                                     <p>INVITE</p>
                                 </div> -->
+                                <span class="interim" id="interim_span">실시간 자막 위치입니다</span>
                             </div>
     
                             <div id="viewer_bottom">
                                 <div id="contents_motion">
                                     <div id='motion_text'>
-                                        <p class='sg_black'>소금이 당신의<strong>행동</strong>을 분석중이에요..</p>
+                                        <p class='sg_black fc-td'>소금이 당신의<strong>행동</strong>을 분석중이에요..</p>
                                     </div>
                                     <div class='contents_underbar'></div>
                                 </div>
@@ -201,23 +202,22 @@
                 <div id="result" class="sg_black">
                     <span class="final" id="final_span">
                         <div>
-                            <p>김주영: 안녕하세요 후동이 소금구이 팀 입니다 좀 더 긴 문장을 작성하면 어떻게 될까요 여기까진 잘 되고요 그럼 더 긴 문장을 작성하면 어떻게 될까요?</p>
-                            <p>오후 5:23:18</p>
+                            <p class='fc-td'>김주영: 안녕하세요 후동이 소금구이 팀 입니다 좀 더 긴 문장을 작성하면 어떻게 될까요 여기까진 잘 되고요 그럼 더 긴 문장을 작성하면 어떻게 될까요?</p>
+                            <p class='fc-td'>오후 5:23:18</p>
                         </div>
                         <div>
-                            <p>박인우: 광인사는 한국의 근대적 출판사이다.</p>
-                            <p>오후 5:25:18</p>
+                            <p class='fc-td'>박인우: 광인사는 한국의 근대적 출판사이다.</p>
+                            <p class='fc-td'>오후 5:25:18</p>
                         </div>
                         <div>
-                            <p>이형석: 췤췤 암더 코리안 탑 클래스 힙합모범 노블래스 파뷸래ㅐ스 ..</p>
-                            <p>오후 5:25:18</p>
+                            <p class='fc-td'>이형석: 췤췤 암더 코리안 탑 클래스 힙합모범 노블래스 파뷸래ㅐ스 ..</p>
+                            <p class='fc-td'>오후 5:25:18</p>
                         </div>
                         <div>
-                            <p>이소현: 원/달러 환율이 낮아진 데다 외국인 증권자금 유입세가 줄어든 영향으로 풀이된다. 28일 한국은행이... 한국은행은 측은 "환율이 2분기 평균 1220원에서 3분기 평균 1188원으로 하향 안정화되면서 외국인 증권자금</p>
-                            <p>오후 5:25:18</p>
+                            <p class='fc-td'>이소현: 원/달러 환율이 낮아진 데다 외국인 증권자금 유입세가 줄어든 영향으로 풀이된다. 28일 한국은행이... 한국은행은 측은 "환율이 2분기 평균 1220원에서 3분기 평균 1188원으로 하향 안정화되면서 외국인 증권자금</p>
+                            <p class='fc-td'>오후 5:25:18</p>
                         </div>
                     </span>
-                    <span class="interim" id="interim_span"></span>
                 </div>
             </div>
         </div>
