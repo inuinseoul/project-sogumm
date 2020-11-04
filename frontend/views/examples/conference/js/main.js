@@ -349,24 +349,6 @@ $(function () {
   function fireCommand(string) {
     if (string.endsWith('레드')) {
       $resultWrap.className = 'red';
-    } else if (string.endsWith('블루')) {
-      $resultWrap.className = 'blue';
-    } else if (string.endsWith('그린')) {
-      $resultWrap.className = 'green';
-    } else if (string.endsWith('옐로우')) {
-      $resultWrap.className = 'yellow';
-    } else if (string.endsWith('오렌지')) {
-      $resultWrap.className = 'orange';
-    } else if (string.endsWith('그레이')) {
-      $resultWrap.className = 'grey';
-    } else if (string.endsWith('골드')) {
-      $resultWrap.className = 'gold';
-    } else if (string.endsWith('화이트')) {
-      $resultWrap.className = 'white';
-    } else if (string.endsWith('블랙')) {
-      $resultWrap.className = 'black';
-    } else if (string.endsWith('알람') || string.endsWith('알 람')) {
-      alert('알람');
     } else if (string.endsWith('노래 켜') || string.endsWith('음악 켜')) {
       $audio.play();
       $iconMusic.classList.add('visible');
@@ -619,16 +601,16 @@ async function predict() {
   let classPrediction = "";
   let remoteUserId_qi = remoteUserId + "_qi";
   if (allquiz[remoteUserId_qi]) {
-    quiz_state.innerHTML = allquiz[remoteUserId_qi];
+    motion_text.innerHTML = allquiz[remoteUserId_qi];
     if (prediction[0].probability > 0.60) {
       classPrediction = "O";
-      quiz_state.innerHTML = quiz_state.innerHTML + "<br>" + classPrediction;
+      quiz_state.innerHTML = classPrediction;
     } else if (prediction[1].probability > 0.60) {
       classPrediction = "X";
-      quiz_state.innerHTML = quiz_state.innerHTML + "<br>" + classPrediction;
+      quiz_state.innerHTML = classPrediction;
     } else {
       classPrediction = "No Detection : " + prediction[2].probability.toFixed(2);
-      quiz_state.innerHTML = quiz_state.innerHTML + "<br>" + classPrediction;
+      quiz_state.innerHTML = classPrediction;
     }
   } else {
     quiz_state.innerHTML = "";
