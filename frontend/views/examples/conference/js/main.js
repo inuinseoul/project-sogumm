@@ -7,6 +7,8 @@
 
 let big = 0;
 let context = {};
+let allquiz = {};
+let answers = {};
 const socket = io();
 let userId;
 let remoteUserId;
@@ -273,6 +275,18 @@ $(function () {
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
 
+  socket.on('getQuiz', (data) => {
+    for (var key in data) {
+      allquiz[key] = data[key];
+    }
+  });
+
+  socket.on('getAnswer', (data) => {
+    for (var key in data) {
+      answers[key] = data[key];
+    }
+  });
+
   recognition.onresult = function (event) {
     console.log('onresult', event);
 
@@ -366,11 +380,45 @@ $(function () {
     } else if (string.endsWith('스피치') || string.endsWith('말해줘') || string.endsWith('말 해 줘')) {
       textToSpeech($('#final_span').text() || '전 음성 인식된 글자를 읽습니다.');
     } else if (string.endsWith('OX 퀴즈 시작')) {
-      URL = "./q_model/";
-      init();
+      if (URL == "./basic_model/") {
+        URL = "./q_model/";
+        init();
+        motion_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
+        let userId_qi = userId + "_qi";
+        let userId_qc = userId + "_qc";
+        allquiz[userId_qi] = prompt('퀴즈 내용을 입력해주세요');
+        allquiz[userId_qc] = prompt('퀴즈 정답을 입력해주세요(O/X)');
+        socket.emit('sendQuiz', allquiz);
+      }
     } else if (string.endsWith('OX 퀴즈 종료')) {
-      URL = "./basic_model/";
-      init();
+      if (URL == "./q_model/") {
+        URL = "./basic_model/";
+        init();
+        let userId_qi = userId + "_qi";
+        let userId_qc = userId + "_qc";
+        allquiz[userId_qi] = null;
+        socket.emit('sendQuiz', allquiz);
+        let remoteUserId_p = remoteUserId + "_p";
+        if ((allquiz[userId_qc] == 'O') || (allquiz[userId_qc] == 'o') || (allquiz[userId_qc] == 'x')) {
+          if (answers[remoteUserId_p] == 'O') {
+            motion_text.innerHTML = "상대방이 정답을 맞췄습니다!";
+          } else if (answers[remoteUserId_p] == 'X') {
+            motion_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
+          } else {
+            motion_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+          }
+        } else if ((allquiz[userId_qc] == 'X') || (allquiz[userId_qc] == 'x')) {
+          if (answers[remoteUserId_p] == 'X') {
+            motion_text.innerHTML = "상대방이 정답을 맞췄습니다!";
+          } else if (answers[remoteUserId_p] == 'O') {
+            motion_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
+          } else {
+            motion_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+          }
+        } else {
+          motion_text.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
+        }
+      }
     }
   }
 
@@ -535,8 +583,8 @@ let model, webcam, labelContainer, maxPredictions;
 
 // Load the image model and setup the webcam
 async function init() {
-  const modelURL = URL + "model.json";
-  const metadataURL = URL + "metadata.json";
+  const modelURL = "./q_model/" + "model.json";
+  const metadataURL = "./q_model/" + "metadata.json";
 
   // load the model and metadata
   // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
@@ -569,31 +617,25 @@ async function predict() {
   // predict can take in an image, video or canvas html element
   const prediction = await model.predict(webcam.canvas);
   let classPrediction = "";
-  if (URL == "./q_model/") {
-    if (prediction[0].probability > 0.90) {
-      classPrediction = "-quiz-<br>" + "O : " + prediction[0].probability.toFixed(2);
-      label_container.innerHTML = classPrediction;
-    } else if (prediction[1].probability > 0.90) {
-      classPrediction = "-quiz-<br>" + "X : " + prediction[1].probability.toFixed(2);
-      label_container.innerHTML = classPrediction;
+  let remoteUserId_qi = remoteUserId + "_qi";
+  if (allquiz[remoteUserId_qi]) {
+    quiz_state.innerHTML = allquiz[remoteUserId_qi];
+    if (prediction[0].probability > 0.60) {
+      classPrediction = "O";
+      quiz_state.innerHTML = quiz_state.innerHTML + "<br>" + classPrediction;
+    } else if (prediction[1].probability > 0.60) {
+      classPrediction = "X";
+      quiz_state.innerHTML = quiz_state.innerHTML + "<br>" + classPrediction;
     } else {
-      classPrediction = "-quiz-<br>" + "No Detection : " + prediction[2].probability.toFixed(2);
-      label_container.innerHTML = classPrediction;
+      classPrediction = "No Detection : " + prediction[2].probability.toFixed(2);
+      quiz_state.innerHTML = quiz_state.innerHTML + "<br>" + classPrediction;
     }
   } else {
-    if (prediction[0].probability > prediction[1].probability) {
-      classPrediction = "-basic-<br>" + "No Detection : " + prediction[0].probability.toFixed(2);
-      label_container.innerHTML = classPrediction;
-    } else {
-      classPrediction = "-basic-<br>" + "Hans-up : " + prediction[1].probability.toFixed(2);
-      label_container.innerHTML = classPrediction;
-    }
+    quiz_state.innerHTML = "";
   }
   userId_p = userId + "_p";
-  context[userId_p] = classPrediction;
-  socket.emit('sendScript', context);
-  remoteUserId_p = remoteUserId + "_p";
-  quiz_state.innerHTML = context[remoteUserId_p];
+  answers[userId_p] = classPrediction;
+  socket.emit('sendAnswer', answers)
 }
 
 // 볼륨 관련 코드
@@ -666,19 +708,6 @@ function init2() {
 
   ajaxRequest.send();
 
-  // set up canvas context for visualizer
-
-  var canvas = document.querySelector('.visualizer');
-  var canvasCtx = canvas.getContext("2d");
-
-  var intendedWidth = document.querySelector('.wrapper').clientWidth;
-
-  canvas.setAttribute('width', intendedWidth);
-
-  var visualSelect = document.getElementById("visual");
-
-  var drawVisual;
-
   //main block for doing the audio recording
 
   if (navigator.mediaDevices.getUserMedia) {
@@ -702,24 +731,15 @@ function init2() {
   }
 
   function visualize() {
-    WIDTH = canvas.width;
-    HEIGHT = canvas.height;
 
-    var visualSetting = visualSelect.value;
-    console.log(visualSetting);
     analyser.fftSize = 256;
     var bufferLengthAlt = analyser.frequencyBinCount; //시각화를 하기 위한 데이터의 갯수, 푸리에변환 절반
     console.log(bufferLengthAlt);
     var dataArrayAlt = new Uint8Array(bufferLengthAlt);//데이터를 담을 bufferLength 크기의 Unit8Array의 배열을 생성
 
     var drawAlt = function () {
-      drawVisual = requestAnimationFrame(drawAlt);
-
       analyser.getByteFrequencyData(dataArrayAlt);
 
-      var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
-      var barHeight;
-      var x = 0;
       var sum_height = 0;
       for (var key in dataArrayAlt) {
         sum_height += dataArrayAlt[key];
@@ -727,22 +747,9 @@ function init2() {
       if (sum_height > 1600) {
         big = 1;
       }
-      for (var i = 0; i < bufferLengthAlt; i++) {
-        barHeight = dataArrayAlt[i]; // 큰 숫자 barheight       
-        // if (barHeight > 150) {
-        //   console.log(barHeight)
-        // }
-        x += barWidth + 1; // 작은 barwidth에 1씩 증가        
-      }
     };
 
-    drawAlt();
+    timerId = setInterval(drawAlt, 5);
   }
 
-  // event listeners to change visualize and voice settings
-
-  visualSelect.onchange = function () {
-    window.cancelAnimationFrame(drawVisual);
-    visualize();
-  }
 }
