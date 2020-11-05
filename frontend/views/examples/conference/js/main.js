@@ -270,7 +270,9 @@ $(function () {
     for (var key in data) {
       context[key] = data[key];
     }
-    final_span.innerHTML = linebreak(context[roomId]);
+    if (final_span.innerHTML != capitalize(context[roomId])) {
+      final_span.innerHTML = capitalize(context[roomId]);
+    }
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
 
@@ -306,17 +308,20 @@ $(function () {
 
       if (event.results[i].isFinal) {
         if (big) {
-          finalTranscript += "<div>" + "<p style=font-size:30px;>" + '[' + userId + "] " + transcript + "</p>" + "<p style=font-size:20px;>" + today.toLocaleTimeString() + "</p>" + "</div>";
+          let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+          finalTranscript += now_chat;
+          final_span.append(now_chat)
           big = 0;
         } else {
-          finalTranscript += "<div>" + "<p style=font-size:20px;>" + '[' + userId + "] " + transcript + "</p>" + "<p style=font-size:20px;>" + today.toLocaleTimeString() + "</p>" + "</div>";
+          let now_chat = "<div>" + "<p style=\"font-size:20px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+          finalTranscript += now_chat;
+          final_span.append(now_chat)
         }
       } else {
         interimTranscript += transcript;
       }
     }
     finalTranscript = capitalize(finalTranscript);
-    final_span.innerHTML = linebreak(finalTranscript);
     interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
