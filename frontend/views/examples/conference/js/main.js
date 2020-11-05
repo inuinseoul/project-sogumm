@@ -391,7 +391,7 @@ $(function () {
         allquiz[userId_qi] = null;
         socket.emit('sendQuiz', allquiz);
         let remoteUserId_p = remoteUserId + "_p";
-        if ((allquiz[userId_qc] == 'O') || (allquiz[userId_qc] == 'o') || (allquiz[userId_qc] == 'x')) {
+        if ((allquiz[userId_qc] == 'O') || (allquiz[userId_qc] == 'o')) {
           if (answers[remoteUserId_p] == 'O') {
             quiz_text.innerHTML = "상대방이 정답을 맞췄습니다!";
           } else if (answers[remoteUserId_p] == 'X') {
@@ -611,28 +611,45 @@ async function predict() {
   const prediction = await model.predict(webcam.canvas);
   let classPrediction = "";
   let remoteUserId_qi = remoteUserId + "_qi";
+  let remoteUserId_qc = remoteUserId + "_qc";
   if (allquiz[remoteUserId_qi]) {
     quiz_text.innerHTML = '"' + allquiz[remoteUserId_qi] + '"';
     if (prediction[0].probability > 0.60) {
-      classPrediction = "<strong>O</strong>";
-      quiz_motion.innerHTML = '의 정답은?  ' + classPrediction;
+      classPrediction = "O";
+      quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
     } else if (prediction[1].probability > 0.60) {
-      classPrediction = "<strong>X</strong>";
-      quiz_motion.innerHTML = '의 정답은?  ' + classPrediction;
+      classPrediction = "X";
+      quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
     } else {
       classPrediction = "No Detection : <strong>" + prediction[2].probability.toFixed(2) + "</strong>";
       quiz_motion.innerHTML = classPrediction;
     }
   } else {
+    if (allquiz[remoteUserId_qc]) {
+      if (allquiz[remoteUserId_qc] == 'o' || allquiz[remoteUserId_qc] == 'O') {
+        if (quiz_motion.innerHTML == "의 정답은?  <strong>O</strong>") {
+          quiz_text.innerHTML = "정답을 맞추셨습니다!";
+        } else {
+          quiz_text.innerHTML = "틀렸습니다. 정답은 O였습니다.";
+        }
+      } else if (allquiz[remoteUserId_qc] == 'x' || allquiz[remoteUserId_qc] == 'X') {
+        console.log(quiz_motion.innerHTML);
+        if (quiz_motion.innerHTML == "의 정답은?  <strong>X</strong>") {
+          quiz_text.innerHTML = "정답을 맞추셨습니다!";
+        } else {
+          quiz_text.innerHTML = "틀렸습니다. 정답은 X였습니다.";
+        }
+      }
+      allquiz[remoteUserId_qc] = null;
+      socket.emit('sendQuiz', allquiz);
+    }
     if (quiz_motion.innerHTML != "") {
       quiz_motion.innerHTML = "";
     }
   }
   userId_p = userId + "_p";
-  if (answers[userId_p] != classPrediction) {
-    answers[userId_p] = classPrediction;
-    socket.emit('sendAnswer', answers);
-  }
+  answers[userId_p] = classPrediction;
+  socket.emit('sendAnswer', answers);
 }
 
 // 볼륨 관련 코드
