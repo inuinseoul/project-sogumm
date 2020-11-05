@@ -1,10 +1,18 @@
 video {
   margin: 0 0 20px 0;
-  width: 100%;
-  z-index: 1;
+  /* width: 100%; */
+  width: 1078px;
+  height: 794px;
+  /* height: 100%; */
+  z-index: 110;
   background: #222;
-  border: solid 1px #fff;
   transition: all 0.6s ease-out;
+}
+#video-wrap {
+  width: 100%;
+  height: 100%;
+
+  /* background-color: #ff6c4f; */
 }
 
 video.effect {
@@ -27,10 +35,11 @@ video.effect {
   border: solid 1px #fff;
 }
 
-#local-video {
+#local-video, #remote-video {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
 }
 
 .room #enter-wrap,
@@ -41,7 +50,11 @@ video.effect {
 .connected #local-video {
   top: 2px;
   left: 2px !important;
-  width: 150px !important;
+  width: 200px !important;
+  height: auto;
   border: solid 1px #fff;
-  z-index: 2;
+
+  transform: translateY(0);
+
+  z-index: 120;
 }
