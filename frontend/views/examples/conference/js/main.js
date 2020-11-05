@@ -19,7 +19,6 @@ $(function () {
 
   let roomId;
   let isOffer;
-  let today = new Date();
 
   const mediaHandler = new MediaHandler();
   const peerHandler = new PeerHandler({
@@ -303,6 +302,7 @@ $(function () {
     }
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       const transcript = event.results[i][0].transcript;
+      let today = new Date();
 
       if (event.results[i].isFinal) {
         if (big) {
