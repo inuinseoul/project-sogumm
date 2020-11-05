@@ -39,7 +39,8 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
     fill: yellow;
 } */
 .icon_on {
-    fill: #ff5635;
+    /* fill: #ff5635; */
+    fill: #ff6c4f;
 }
 .icon_off {
     fill: #c9c9c9;
@@ -167,6 +168,7 @@ input:checked + .slider:before {
     background-color: rgba(255, 255, 255, 1);
 }
 #final_span.filter > div {
+    font-weight: 300;
     background-color: rgba(255, 255, 255, 0.05);
 }
 #final_span.filter > div:hover {
@@ -241,17 +243,19 @@ input:checked + .slider:before {
     flex-direction: row;
     /* justify-content: flex-end; */
 }
-#article_header .icon {
+#article_header > .buttons > div {
     height: 50px;
     margin-bottom: 5px;
     margin-left: 30px;
 
-    
     /*
     *   NIGHTMODE-OPTION
     */
     position: relative;
     z-index: 110;
+}
+#article_header .icon {
+    height: 100%;
 }
 /* #article_header > .icon {
     height: 70px;
@@ -335,7 +339,7 @@ input:checked + .slider:before {
     /* backdrop-filter: blur(15px); */
     /* background-color: white; */
 }
-#viewer_top #video_msg {
+#viewer_top .video_msg {
     position: absolute;
     right: 5%;
     top: 50%;
@@ -362,7 +366,7 @@ input:checked + .slider:before {
     */
     z-index: 110;
 }
-#viewer_top #btn-start {
+#viewer_top .video_btn {
     border: 3px solid #ff6c4f;
 
     color: #ff6c4f;
@@ -378,10 +382,17 @@ input:checked + .slider:before {
 
     transition-duration: 0.5s;
 }
-#viewer_top #btn-start:hover {
+#viewer_top .video_btn:hover {
     color: white;
     background-color: #ff6c4f;
 }
+#btn-camera.active > svg {
+    fill: #c9c9c9;
+}
+#btn-mic.on > svg {
+    fill: #ff6c4f;
+}
+
 #viewer_top #interim_span {
     color: white;
     font-size: 25px;
