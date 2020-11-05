@@ -58,9 +58,9 @@ $(function () {
 
     $waitWrap.html(
       [
-        '<div class="room-info">',
-        '<p>당신을 기다리고 있어요. 참여 하실래요?</p>',
-        '<button id="btn-join">Join</button>',
+        '<div class="video_msg room-info">',
+        '<p class="sg_black fc-td">아래 버튼을 눌러<br />온라인 미팅에 참여할 수 있습니다</p>',
+        '<p id="btn-join" class="video_btn">JOIN</p>',
         '</div>',
       ].join('\n')
     );

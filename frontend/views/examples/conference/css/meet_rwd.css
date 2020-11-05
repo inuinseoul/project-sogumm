@@ -1,0 +1,47 @@
+video {
+  margin: 0 0 20px 0;
+  width: 100%;
+  z-index: 1;
+  background: #222;
+  border: solid 1px #fff;
+  transition: all 0.6s ease-out;
+}
+
+video.effect {
+  transform: scale(1, 1);
+}
+
+/* #video-wrap {
+  display: none;
+  position: relative;
+  margin: 0 auto;
+  min-height: 620px;
+} */
+
+#local {
+  position: absolute;
+  top: 4%;
+  right: 2%;
+  width: 340px;
+  height: 220px;
+  border: solid 1px #fff;
+}
+
+#local-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.room #enter-wrap,
+.connected #create-wrap,
+.connected #wait-wrap {
+  display: none;
+}
+.connected #local-video {
+  top: 2px;
+  left: 2px !important;
+  width: 150px !important;
+  border: solid 1px #fff;
+  z-index: 2;
+}

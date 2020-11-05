@@ -22,7 +22,7 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
     min-width: 300px;
     height: 100%;
 
-    background-image: url('./meet_background.png');
+    background-image: url('../../resource/meet_background.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x: left;    
@@ -39,8 +39,7 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
     fill: yellow;
 } */
 .icon_on {
-    /* fill: #ff5635; */
-    fill: #ff6c4f;
+    fill: #ff5635;
 }
 .icon_off {
     fill: #c9c9c9;
@@ -128,7 +127,7 @@ input:checked + .slider:before {
     background-color: #ff6c4f;
     box-shadow: -3px 0px 20px 0px rgba(255, 42, 0, 0.3);
 
-    background-image: url('./meet_sidebg.png');
+    background-image: url('../../resource/meet_sidebg.png');
     background-repeat: no-repeat;
     background-size: 450%;
     background-position-y: top;
@@ -168,7 +167,6 @@ input:checked + .slider:before {
     background-color: rgba(255, 255, 255, 1);
 }
 #final_span.filter > div {
-    font-weight: 300;
     background-color: rgba(255, 255, 255, 0.05);
 }
 #final_span.filter > div:hover {
@@ -243,19 +241,17 @@ input:checked + .slider:before {
     flex-direction: row;
     /* justify-content: flex-end; */
 }
-#article_header > .buttons > div {
+#article_header .icon {
     height: 50px;
     margin-bottom: 5px;
     margin-left: 30px;
 
+    
     /*
     *   NIGHTMODE-OPTION
     */
     position: relative;
     z-index: 110;
-}
-#article_header .icon {
-    height: 100%;
 }
 /* #article_header > .icon {
     height: 70px;
@@ -339,7 +335,7 @@ input:checked + .slider:before {
     /* backdrop-filter: blur(15px); */
     /* background-color: white; */
 }
-#viewer_top .video_msg {
+#viewer_top #video_msg {
     position: absolute;
     right: 5%;
     top: 50%;
@@ -366,7 +362,7 @@ input:checked + .slider:before {
     */
     z-index: 110;
 }
-#viewer_top .video_btn {
+#viewer_top #btn-start {
     border: 3px solid #ff6c4f;
 
     color: #ff6c4f;
@@ -382,17 +378,10 @@ input:checked + .slider:before {
 
     transition-duration: 0.5s;
 }
-#viewer_top .video_btn:hover {
+#viewer_top #btn-start:hover {
     color: white;
     background-color: #ff6c4f;
 }
-#btn-camera.active > svg {
-    fill: #c9c9c9;
-}
-#btn-mic.on > svg {
-    fill: #ff6c4f;
-}
-
 #viewer_top #interim_span {
     color: white;
     font-size: 25px;
