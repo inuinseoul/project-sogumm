@@ -458,7 +458,7 @@ input:checked + .slider:before {
     
     /* background-color: teal; */
 }
-#motion_text p {
+#motion_text * {
     font-size: 32px;
     font-weight: 200;
     /* color: #444444; */

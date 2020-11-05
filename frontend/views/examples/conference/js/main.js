@@ -308,12 +308,12 @@ $(function () {
 
       if (event.results[i].isFinal) {
         if (big) {
-          let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+          let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
           finalTranscript += now_chat;
           final_span.append(now_chat)
           big = 0;
         } else {
-          let now_chat = "<div>" + "<p style=\"font-size:20px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+          let now_chat = "<div>" + "<p>" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
           finalTranscript += now_chat;
           final_span.append(now_chat)
         }
@@ -370,7 +370,7 @@ $(function () {
       if (URL == "./basic_model/") {
         URL = "./q_model/";
         init();
-        motion_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
+        quiz_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
         let userId_qi = userId + "_qi";
         let userId_qc = userId + "_qc";
         allquiz[userId_qi] = prompt('퀴즈 내용을 입력해주세요');
@@ -388,22 +388,22 @@ $(function () {
         let remoteUserId_p = remoteUserId + "_p";
         if ((allquiz[userId_qc] == 'O') || (allquiz[userId_qc] == 'o') || (allquiz[userId_qc] == 'x')) {
           if (answers[remoteUserId_p] == 'O') {
-            motion_text.innerHTML = "상대방이 정답을 맞췄습니다!";
+            quiz_text.innerHTML = "상대방이 정답을 맞췄습니다!";
           } else if (answers[remoteUserId_p] == 'X') {
-            motion_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
+            quiz_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
           } else {
-            motion_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+            quiz_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
           }
         } else if ((allquiz[userId_qc] == 'X') || (allquiz[userId_qc] == 'x')) {
           if (answers[remoteUserId_p] == 'X') {
-            motion_text.innerHTML = "상대방이 정답을 맞췄습니다!";
+            quiz_text.innerHTML = "상대방이 정답을 맞췄습니다!";
           } else if (answers[remoteUserId_p] == 'O') {
-            motion_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
+            quiz_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
           } else {
-            motion_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+            quiz_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
           }
         } else {
-          motion_text.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
+          quiz_text.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
         }
       }
     }
@@ -606,19 +606,19 @@ async function predict() {
   let classPrediction = "";
   let remoteUserId_qi = remoteUserId + "_qi";
   if (allquiz[remoteUserId_qi]) {
-    motion_text.innerHTML = allquiz[remoteUserId_qi];
+    quiz_text.innerHTML = '"' + allquiz[remoteUserId_qi] + '"';
     if (prediction[0].probability > 0.60) {
-      classPrediction = "O";
-      quiz_state.innerHTML = classPrediction;
+      classPrediction = "<strong>O</strong>";
+      quiz_motion.innerHTML = '의 정답은?  ' + classPrediction;
     } else if (prediction[1].probability > 0.60) {
-      classPrediction = "X";
-      quiz_state.innerHTML = classPrediction;
+      classPrediction = "<strong>X</strong>";
+      quiz_motion.innerHTML = '의 정답은?  ' + classPrediction;
     } else {
-      classPrediction = "No Detection : " + prediction[2].probability.toFixed(2);
-      quiz_state.innerHTML = classPrediction;
+      classPrediction = "No Detection : <strong>" + prediction[2].probability.toFixed(2) + "</strong>";
+      quiz_motion.innerHTML = classPrediction;
     }
   } else {
-    quiz_state.innerHTML = "";
+    quiz_motion.innerHTML = "";
   }
   userId_p = userId + "_p";
   answers[userId_p] = classPrediction;
