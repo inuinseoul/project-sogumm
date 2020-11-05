@@ -68,6 +68,7 @@ $(function () {
       isOffer = true;
       peerHandler.getUserMedia(mediaOption, onLocalStream, isOffer);
       $(this).attr('disabled', true);
+      $('#btn-join').off();
     });
 
     $createWrap.slideUp(animationTime);
@@ -302,6 +303,7 @@ $(function () {
     if (finalTranscript == undefined) {
       finalTranscript = ''
     }
+    let check_talk = '';
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       const transcript = event.results[i][0].transcript;
       let today = new Date();
@@ -320,18 +322,21 @@ $(function () {
       } else {
         interimTranscript += transcript;
       }
+      check_talk = transcript;
     }
     finalTranscript = capitalize(finalTranscript);
     interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
-    context[roomId] = finalTranscript;
-    context[userId] = interimTranscript;
-    socket.emit('sendScript', context);
+    if (context[roomId] != finalTranscript) {
+      context[roomId] = finalTranscript;
+      context[userId] = interimTranscript;
+      socket.emit('sendScript', context);
+    }
 
     console.log('finalTranscript', finalTranscript);
     console.log('interimTranscript', interimTranscript);
-    fireCommand(interimTranscript);
+    fireCommand(check_talk);
   };
 
   /**
@@ -490,6 +495,7 @@ $(function () {
 
     $('#btn-start').click(function () {
       peerHandler.getUserMedia(mediaOption, onLocalStream);
+      $('#btn-start').off();
     });
 
     $('#btn-camera').click(function () {
@@ -618,11 +624,15 @@ async function predict() {
       quiz_motion.innerHTML = classPrediction;
     }
   } else {
-    quiz_motion.innerHTML = "";
+    if (quiz_motion.innerHTML != "") {
+      quiz_motion.innerHTML = "";
+    }
   }
   userId_p = userId + "_p";
-  answers[userId_p] = classPrediction;
-  socket.emit('sendAnswer', answers)
+  if (answers[userId_p] != classPrediction) {
+    answers[userId_p] = classPrediction;
+    socket.emit('sendAnswer', answers);
+  }
 }
 
 // 볼륨 관련 코드
