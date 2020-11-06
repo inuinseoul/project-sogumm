@@ -379,7 +379,13 @@ $(function () {
         let userId_qi = userId + "_qi";
         let userId_qc = userId + "_qc";
         allquiz[userId_qi] = prompt('퀴즈 내용을 입력해주세요');
+        while ((allquiz[userId_qi] == null) || (allquiz[userId_qi] == "")) {
+          allquiz[userId_qi] = prompt('퀴즈 내용을 입력해주세요 (최소 한글자를 입력해야 합니다.)');
+        }
         allquiz[userId_qc] = prompt('퀴즈 정답을 입력해주세요(O/X)');
+        while ((allquiz[userId_qc] != "O") && (allquiz[userId_qc] != "o") && (allquiz[userId_qc] != "X") && (allquiz[userId_qc] != "x")) {
+          allquiz[userId_qc] = prompt('퀴즈 정답을 입력해주세요 (O 또는 X로 입력해야 합니다.)');
+        }
         socket.emit('sendQuiz', allquiz);
       }
     } else if (string.endsWith('OX 퀴즈 종료')) {
@@ -405,7 +411,7 @@ $(function () {
           } else if (answers[remoteUserId_p] == 'O') {
             quiz_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
           } else {
-            quiz_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+            quiz_text.innerHTML = "상대방이 없거나 상대방의 동작이 제대로 인식되지 못한 것 같아요.";
           }
         } else {
           quiz_text.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
@@ -480,6 +486,9 @@ $(function () {
    */
   function initialize() {
     userId = prompt('닉네임을 입력해주세요');
+    while ((userId == null) || (userId == "")) {
+      userId = prompt('닉네임을 입력해주세요 (최소 한글자를 입력해야합니다.)');
+    }
     setRoomToken();
     roomId = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
     setClipboard();
