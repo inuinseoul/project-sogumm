@@ -229,7 +229,8 @@ $(function () {
 
   let isRecognizing = false;
   let ignoreEndProcess = false;
-  let finalTranscript = '';
+  let finalTranscript = ''; //한문장씩 처리
+  let finalTranscript2 =''; //전체문장 처리
 
   recognition.continuous = true;
   recognition.interimResults = true;
@@ -265,14 +266,11 @@ $(function () {
   /**
    * 음성 인식 결과 처리
    */
-  context[roomId] = '';
 
   socket.on('getScript', (data) => {
-    for (var key in data) {
-      context[key] = data[key];
-    }
-    if (final_span.innerHTML != capitalize(context[roomId])) {
-      final_span.innerHTML = capitalize(context[roomId]);
+    context[roomId] = data[roomId];
+    if (final_span.innerHTML != finalTranscript) {
+      final_span.innerHTML = finalTranscript2;
     }
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
@@ -299,24 +297,31 @@ $(function () {
       return;
     }
 
-    finalTranscript = context[roomId];
-    if (finalTranscript == undefined) {
+    if (finalTranscript2 == undefined) {
       finalTranscript = ''
     }
     let check_talk = '';
+
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       const transcript = event.results[i][0].transcript;
+      const transcript2 = context[roomId]
       let today = new Date();
+
+      //소켓에 음성데이터를 넘깁니다.
+      context[roomId] = transcript;
+      socket.emit('sendScript',context);
 
       if (event.results[i].isFinal) {
         if (big) {
           let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
-          finalTranscript += now_chat;
+          finalTranscript = now_chat;
+          finalTranscript2 += finalTranscript
           final_span.append(now_chat)
           big = 0;
         } else {
           let now_chat = "<div>" + "<p>" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
-          finalTranscript += now_chat;
+          finalTranscript = now_chat;
+          finalTranscript2 += finalTranscript
           final_span.append(now_chat)
         }
       } else {
@@ -324,15 +329,20 @@ $(function () {
       }
       check_talk = transcript;
     }
+
     finalTranscript = capitalize(finalTranscript);
     interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
-    if (context[roomId] != finalTranscript) {
-      context[roomId] = finalTranscript;
-      context[userId] = interimTranscript;
-      socket.emit('sendScript', context);
-    }
+    //한국어버전
+    $('#btn-ko').click(function(){
+      context['translate'] = 'Korean'
+    });
+
+    //영어버전
+    $('#btn-en').click(function(){
+      context['translate'] = 'English'
+    });
 
     console.log('finalTranscript', finalTranscript);
     console.log('interimTranscript', interimTranscript);
@@ -527,7 +537,7 @@ $(function () {
     var header = "<html>" +
       "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
-    var sourceHTML = header + String(finalTranscript) + footer;
+    var sourceHTML = header + String($('#result span').html()) + footer;
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");
@@ -543,7 +553,7 @@ $(function () {
     var header = "<html>" +
       "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
-    var sourceHTML = header + String(finalTranscript) + footer;
+    var sourceHTML = header + String($('#result span').html()) + footer;
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");
