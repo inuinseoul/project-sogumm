@@ -313,13 +313,13 @@ $(function () {
 
       if (event.results[i].isFinal) {
         if (big) {
-          let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
+          let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript2 + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
           finalTranscript = now_chat;
           finalTranscript2 += finalTranscript
           final_span.append(now_chat)
           big = 0;
         } else {
-          let now_chat = "<div>" + "<p>" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
+          let now_chat = "<div>" + "<p>" + userId + ": " + transcript2 + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
           finalTranscript = now_chat;
           finalTranscript2 += finalTranscript
           final_span.append(now_chat)
@@ -330,7 +330,6 @@ $(function () {
       check_talk = transcript;
     }
 
-    finalTranscript = capitalize(finalTranscript);
     interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
