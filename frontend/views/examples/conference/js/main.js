@@ -13,12 +13,14 @@ const socket = io();
 let userId;
 let remoteUserId;
 let users = [];
+let translate = 0;
+
 
 $(function () {
   console.log('Loaded Main');
 
-  let roomId;
   let isOffer;
+  let roomId;
 
   const mediaHandler = new MediaHandler();
   const peerHandler = new PeerHandler({
@@ -271,8 +273,15 @@ $(function () {
     for (var key in data) {
       context[key] = data[key];
     }
-    if (final_span.innerHTML != capitalize(context[roomId])) {
-      final_span.innerHTML = capitalize(context[roomId]);
+    let roomId_en = roomId + "_en";
+    if (translate) {
+      if (final_span.innerHTML != context[roomId_en]) {
+        final_span.innerHTML = context[roomId_en];
+      }
+    } else {
+      if (final_span.innerHTML != capitalize(context[roomId])) {
+        final_span.innerHTML = capitalize(context[roomId]);
+      }
     }
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
@@ -301,23 +310,24 @@ $(function () {
 
     finalTranscript = context[roomId];
     if (finalTranscript == undefined) {
-      finalTranscript = ''
+      finalTranscript = '';
     }
     let check_talk = '';
     for (let i = event.resultIndex; i < event.results.length; ++i) {
-      const transcript = event.results[i][0].transcript;
-      let today = new Date();
+      let transcript = event.results[i][0].transcript;
 
       if (event.results[i].isFinal) {
+        let today = new Date();
+        socket.emit('sendTranslate', transcript, big, roomId, userId, today.toLocaleTimeString());
         if (big) {
           let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
           finalTranscript += now_chat;
-          final_span.append(now_chat)
+          final_span.append(now_chat);
           big = 0;
         } else {
           let now_chat = "<div>" + "<p>" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
           finalTranscript += now_chat;
-          final_span.append(now_chat)
+          final_span.append(now_chat);
         }
       } else {
         interimTranscript += transcript;
@@ -333,8 +343,9 @@ $(function () {
       context[userId] = interimTranscript;
       socket.emit('sendScript', context);
     }
-
+    let roomId_en = roomId + "_en";
     console.log('finalTranscript', finalTranscript);
+    console.log('final_english', context[roomId_en]);
     console.log('interimTranscript', interimTranscript);
     fireCommand(check_talk);
   };
@@ -501,7 +512,6 @@ $(function () {
     socket.on('message', onMessage);
     // Peer 관련 이벤트 바인딩
     peerHandler.on('addRemoteStream', onRemoteStream);
-
     $('#btn-start').click(function () {
       peerHandler.getUserMedia(mediaOption, onLocalStream);
       $('#btn-start').off();
@@ -511,6 +521,15 @@ $(function () {
       const $this = $(this);
       $this.toggleClass('active');
       mediaHandler[$this.hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+    });
+
+    $('#btn-lang').click(function () {
+      if (translate == 1) {
+        translate = 0;
+      } else {
+        translate = 1;
+      }
+      socket.emit('sendScript', context);
     });
 
     $('#btn-mic').click(function () {
@@ -527,7 +546,7 @@ $(function () {
     var header = "<html>" +
       "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
-    var sourceHTML = header + String(finalTranscript) + footer;
+    var sourceHTML = header + String(final_span.innerHTML) + footer;
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");
@@ -543,7 +562,7 @@ $(function () {
     var header = "<html>" +
       "<head><meta charset='utf-8'></head><body>";
     var footer = "</body></html>";
-    var sourceHTML = header + String(finalTranscript) + footer;
+    var sourceHTML = header + String(final_span.innerHTML) + footer;
 
     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
     var fileDownload = document.createElement("a");

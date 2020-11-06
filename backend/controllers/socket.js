@@ -2,6 +2,10 @@
  * Websocket handler
  * @param http
  */
+
+//번역기 모듈
+const translate = require('@vitalets/google-translate-api');
+
 module.exports = (http) => {
   const io = require('socket.io')(http);
   let rooms = {};
@@ -110,6 +114,23 @@ module.exports = (http) => {
         answers[key] = data[key];
       }
       io.emit('getAnswer', answers);
+    });
+
+    socket.on('sendTranslate', (korea, big, roomId, userId, today) => {
+      let roomId_en = roomId + "_en";
+      if (context[roomId_en] == undefined) {
+        context[roomId_en] = "";
+      }
+      translate(String(korea), { to: 'en' }).then(res => {
+        if (big) {
+          context[roomId_en] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+        } else {
+          context[roomId_en] += "<div>" + "<p style=\"font-size:20px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+        }
+        io.emit('getScript', context);
+      }).catch(err => {
+        console.error(err);
+      })
     });
   });
 
