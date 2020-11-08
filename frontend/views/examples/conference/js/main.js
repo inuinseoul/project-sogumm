@@ -61,6 +61,27 @@ $(function () {
       isOffer = true;
       peerHandler.getUserMedia(mediaOption, onLocalStream, isOffer);
       $(this).attr('disabled', true);
+
+      $btnMic.addEventListener('click', start);
+
+      $('#btn-camera').click(function () {
+        const $this = $(this);
+        $this.toggleClass('active');
+        mediaHandler[$this.hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+      });
+
+      $('#btn-lang').click(function () {
+        if (translate == 1) {
+          translate = 0;
+        } else {
+          translate = 1;
+        }
+        socket.emit('sendScript', context);
+      });
+
+      init();
+      start();
+      $('#btn-camera').toggleClass('active');
       $('#btn-join').off();
     });
 
@@ -537,31 +558,32 @@ $(function () {
       }
       peerHandler.getUserMedia(mediaOption, onLocalStream);
       quiz_text.innerHTML = "방 링크를 공유해서 상대방과 만나보세요!";
+
+      $btnMic.addEventListener('click', start);
+
+      $('#btn-camera').click(function () {
+        const $this = $(this);
+        $this.toggleClass('active');
+        mediaHandler[$this.hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+      });
+
+      $('#btn-lang').click(function () {
+        if (translate == 1) {
+          translate = 0;
+        } else {
+          translate = 1;
+        }
+        socket.emit('sendScript', context);
+      });
+
+      init();
+
       $('#btn-start').off();
+      start();
+      $('#btn-camera').toggleClass('active');
     });
 
-    $('#btn-camera').click(function () {
-      const $this = $(this);
-      $this.toggleClass('active');
-      mediaHandler[$this.hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
-    });
 
-    $('#btn-lang').click(function () {
-      if (translate == 1) {
-        translate = 0;
-      } else {
-        translate = 1;
-      }
-      socket.emit('sendScript', context);
-    });
-
-    $('#btn-mic').click(function () {
-      const $this = $(this);
-      $this.toggleClass('active');
-      mediaHandler[$this.hasClass('active') ? 'muteAudio' : 'unmuteAudio']();
-    });
-
-    init();
   }
 
   //워드 다운로드
@@ -607,7 +629,7 @@ $(function () {
       const text = final_span.innerText || defaultMsg;
       textToSpeech(text);
     });
-    $btnMic.addEventListener('click', start);
+
   }
 
   initialize();
