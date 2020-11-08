@@ -536,6 +536,7 @@ $(function () {
         socket.emit('enter', roomId, userId);
       }
       peerHandler.getUserMedia(mediaOption, onLocalStream);
+      quiz_text.innerHTML = "방 링크를 공유해서 상대방과 만나보세요!";
       $('#btn-start').off();
     });
 
