@@ -14,8 +14,6 @@ let userId;
 let remoteUserId;
 let users = [];
 let translate = 0;
-const $createWrap = $('#create-wrap');
-
 
 $(function () {
   console.log('Loaded Main');
@@ -47,6 +45,7 @@ $(function () {
 
   // DOM
   const $body = $('body');
+  const $createWrap = $('#create-wrap');
   const $waitWrap = $('#wait-wrap');
   const $videoWrap = $('#video-wrap');
   const $uniqueToken = $('#unique-token');
@@ -383,21 +382,9 @@ $(function () {
    */
   function fireCommand(string) {
     if (string.endsWith('레드')) {
-      $resultWrap.className = 'red';
-    } else if (string.endsWith('노래 켜') || string.endsWith('음악 켜')) {
-      $audio.play();
-      $iconMusic.classList.add('visible');
-    } else if (string.endsWith('노래 꺼') || string.endsWith('음악 꺼')) {
-      $audio.pause();
-      $iconMusic.classList.remove('visible');
-    } else if (string.endsWith('볼륨 업') || string.endsWith('볼륨업')) {
-      $audio.volume += 0.2;
-    } else if (string.endsWith('볼륨 다운') || string.endsWith('볼륨다운')) {
-      $audio.volume -= 0.2;
-    } else if (string.endsWith('스피치') || string.endsWith('말해줘') || string.endsWith('말 해 줘')) {
-      textToSpeech($('#final_span').text() || '전 음성 인식된 글자를 읽습니다.');
+      console.log("레드");
     } else if (string.endsWith('OX 퀴즈 시작')) {
-      if (URL == "./basic_model/") {
+      if (URL == "nope") {
         URL = "./q_model/";
         init();
         quiz_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
@@ -415,7 +402,7 @@ $(function () {
       }
     } else if (string.endsWith('OX 퀴즈 종료')) {
       if (URL == "./q_model/") {
-        URL = "./basic_model/";
+        URL = "nope";
         init();
         let userId_qi = userId + "_qi";
         let userId_qc = userId + "_qc";
@@ -638,11 +625,7 @@ $(function () {
 });
 
 // 모션인식 관련 코드
-// More API functions here:
-// https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-// the link to your model provided by Teachable Machine export panel
-let URL = "./basic_model/";
+let URL = "nope";
 
 let model, webcam, labelContainer, maxPredictions;
 
@@ -651,24 +634,14 @@ async function init() {
   const modelURL = "./q_model/" + "model.json";
   const metadataURL = "./q_model/" + "metadata.json";
 
-  // load the model and metadata
-  // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-  // or files from your local hard drive
-  // Note: the pose library adds "tmImage" object to your window (window.tmImage)
   model = await tmImage.load(modelURL, metadataURL);
   maxPredictions = model.getTotalClasses();
 
-  // Convenience function to setup a webcam
-  const flip = true; // whether to flip the webcam
-  webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
-  await webcam.setup(); // request access to the webcam
+  const flip = true;
+  webcam = new tmImage.Webcam(200, 200, flip);
+  await webcam.setup();
   await webcam.play();
   window.requestAnimationFrame(loop);
-
-  // append elements to the DOM
-  // for (let i = 0; i < maxPredictions; i++) { // and class labels
-  //   labelContainer.appendChild(document.createElement("div"));
-  // }
 }
 
 async function loop() {
@@ -677,9 +650,7 @@ async function loop() {
   window.requestAnimationFrame(loop);
 }
 
-// run the webcam image through the image model
 async function predict() {
-  // predict can take in an image, video or canvas html element
   const prediction = await model.predict(webcam.canvas);
   let classPrediction = "";
   let remoteUserId_qi = remoteUserId + "_qi";
@@ -735,31 +706,22 @@ function init2() {
   if (navigator.mediaDevices.getUserMedia === undefined) {
     navigator.mediaDevices.getUserMedia = function (constraints) {
 
-      // First get ahold of the legacy getUserMedia, if present
       var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
-      // Some browsers just don't implement it - return a rejected promise with an error
-      // to keep a consistent interface
       if (!getUserMedia) {
         return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
       }
 
-      // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
       return new Promise(function (resolve, reject) {
         getUserMedia.call(navigator, constraints, resolve, reject);
       });
     }
   }
 
-  // set up forked web audio context, for multiple browsers
-  // window. is needed otherwise Safari explodes
-
   var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   var voiceSelect = document.getElementById("voice");
   var source;
   var stream;
-
-  //set up the different audio nodes we will use for the app
 
   var analyser = audioCtx.createAnalyser();
   analyser.minDecibels = -90;
@@ -770,8 +732,6 @@ function init2() {
   var gainNode = audioCtx.createGain();
   var biquadFilter = audioCtx.createBiquadFilter();
   var convolver = audioCtx.createConvolver();
-
-  // grab audio track via XHR for convolver node
 
   var soundSource;
 
@@ -793,8 +753,6 @@ function init2() {
   };
 
   ajaxRequest.send();
-
-  //main block for doing the audio recording
 
   if (navigator.mediaDevices.getUserMedia) {
     console.log('getUserMedia supported.');
