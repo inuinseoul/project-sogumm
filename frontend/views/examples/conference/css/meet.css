@@ -491,6 +491,11 @@ input:checked + .slider:before {
 #viewer_bottom .icon:hover {
     fill: white;
 }
+
+#unique-token {
+    cursor:pointer;
+}
+
 #unique-token:hover ~ .contents_underbar { top: 0; }
 #contents_wrap > #contents_footer {
     text-align: center;

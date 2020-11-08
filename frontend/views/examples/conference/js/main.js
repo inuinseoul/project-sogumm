@@ -607,7 +607,6 @@ $(function () {
       const text = final_span.innerText || defaultMsg;
       textToSpeech(text);
     });
-    start()
     $btnMic.addEventListener('click', start);
   }
 
