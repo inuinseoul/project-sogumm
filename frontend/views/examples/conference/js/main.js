@@ -458,6 +458,7 @@ $(function () {
       recognition.stop();
       return;
     }
+    socket.emit('sendScript', context);
     recognition.lang = language;
     recognition.start();
     ignoreEndProcess = false;
