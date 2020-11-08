@@ -125,7 +125,7 @@ module.exports = (http) => {
         if (big) {
           context[roomId_en] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
         } else {
-          context[roomId_en] += "<div>" + "<p style=\"font-size:20px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          context[roomId_en] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
         }
         io.emit('getScript', context);
       }).catch(err => {

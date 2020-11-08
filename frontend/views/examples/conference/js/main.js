@@ -14,6 +14,7 @@ let userId;
 let remoteUserId;
 let users = [];
 let translate = 0;
+const $createWrap = $('#create-wrap');
 
 
 $(function () {
@@ -46,7 +47,6 @@ $(function () {
 
   // DOM
   const $body = $('body');
-  const $createWrap = $('#create-wrap');
   const $waitWrap = $('#wait-wrap');
   const $videoWrap = $('#video-wrap');
   const $uniqueToken = $('#unique-token');
@@ -56,15 +56,6 @@ $(function () {
    */
   function onDetectUser() {
     console.log('onDetectUser');
-
-    $waitWrap.html(
-      [
-        '<div class="video_msg room-info">',
-        '<p class="sg_black fc-td">아래 버튼을 눌러<br />온라인 미팅에 참여할 수 있습니다</p>',
-        '<p id="btn-join" class="video_btn">JOIN</p>',
-        '</div>',
-      ].join('\n')
-    );
 
     $('#btn-join').click(function () {
       isOffer = true;
@@ -143,9 +134,11 @@ $(function () {
       .toUpperCase()
       .replace(/\./g, '-');
     if (location.hash.length > 2) {
+      // 기존 방에 들어간 경우
       $uniqueToken.attr('href', location.href);
       roomId = location.href;
     } else {
+      // 내방을 만든 경우
       location.hash = '#' + hashValue;
       roomId = location.href;
     }
@@ -500,19 +493,48 @@ $(function () {
     while ((userId == null) || (userId == "")) {
       userId = prompt('닉네임을 입력해주세요 (최소 한글자를 입력해야합니다.)');
     }
-    setRoomToken();
-    roomId = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
-    setClipboard();
-    console.log("===" + roomId + "===");
-    console.log("===" + userId + "===");
+    let check = 0;
+
     // 소켓 관련 이벤트 바인딩
-    socket.emit('enter', roomId, userId);
     socket.on('join', onJoin);
     socket.on('leave', onLeave);
     socket.on('message', onMessage);
     // Peer 관련 이벤트 바인딩
     peerHandler.on('addRemoteStream', onRemoteStream);
+
+    if (location.hash.length > 2) {
+      $waitWrap.html(
+        [
+          '<div class="video_msg room-info">',
+          '<p class="sg_black fc-td">아래 버튼을 눌러<br />온라인 미팅에 참여할 수 있습니다</p>',
+          '<p id="btn-join" class="video_btn">JOIN</p>',
+          '</div>',
+        ].join('\n')
+      );
+      setRoomToken();
+      roomId = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
+      setClipboard();
+      socket.emit('enter', roomId, userId);
+    } else {
+      check = 1;
+      console.log("fuck");
+      $createWrap.html(
+        [
+          '<div class="video_msg">',
+          '<p class="sg_black fc-td">아래 버튼을 눌러<br />온라인 미팅을 시작할 수 있습니다</p>',
+          '<p id="btn-start" class="video_btn">START</p>',
+          '</div>',
+        ].join('\n')
+      );
+    }
+
     $('#btn-start').click(function () {
+      if (check) {
+        setRoomToken();
+        roomId = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
+        setClipboard();
+        socket.emit('enter', roomId, userId);
+      }
       peerHandler.getUserMedia(mediaOption, onLocalStream);
       $('#btn-start').off();
     });
