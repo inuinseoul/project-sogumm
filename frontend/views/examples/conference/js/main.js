@@ -4,7 +4,7 @@
  * 박인우, 이형석, 김주영, 이소현
  *
  */
-
+let highlight = 0;
 let big = 0;
 let context = {};
 let allquiz = {};
@@ -332,17 +332,57 @@ $(function () {
       if (event.results[i].isFinal) {
         let today = new Date();
         socket.emit('sendTranslate', transcript, big, roomId, userId, today.toLocaleTimeString());
-        if (big) {
-          let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
-          finalTranscript += now_chat;
-          final_span.append(now_chat);
-          big = 0;
-        } else {
-          let now_chat = "<div>" + "<p>" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
-          finalTranscript += now_chat;
-          final_span.append(now_chat);
+
+        if(transcript.endsWith('레드')) {
+          if (highlight==1) {
+            highlight = 0;
+          }
+          else {
+            highlight = 1;
+          }
         }
-      } else {
+        
+        if (big) {
+          if (highlight==1) {
+            let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+            finalTranscript += now_chat;
+            final_span.append(now_chat)
+            big = 0; }
+
+          else{
+            if(transcript.endsWith('레드')) {
+              let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              finalTranscript += now_chat;
+              final_span.append(now_chat)
+              big = 0;}
+            else {
+              let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              finalTranscript += now_chat;
+              final_span.append(now_chat)
+              big = 0;
+              }
+            }
+          } 
+        else {
+          if (highlight==1) {
+            let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+            finalTranscript += now_chat;
+            final_span.append(now_chat) }
+          
+          else {
+            if(transcript.endsWith('레드')) {
+              let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              finalTranscript += now_chat;
+              final_span.append(now_chat) }
+
+            else {
+            let now_chat = "<div>" + "<p style=\"font-size:20px; \">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+            finalTranscript += now_chat;
+            final_span.append(now_chat) }
+          }
+        }
+      }
+      else {
         interimTranscript += transcript;
       }
       check_talk = transcript;
