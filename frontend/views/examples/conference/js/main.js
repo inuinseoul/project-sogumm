@@ -81,6 +81,8 @@ $(function () {
       init();
       start();
       $('#btn-camera').toggleClass('active');
+      quiz_text.innerHTML = remoteUserId + "님과 연결되었습니다.";
+      console.log("ddds====ssdsd===");
       $('#btn-join').off();
     });
 
@@ -114,6 +116,7 @@ $(function () {
       $body.removeClass('connected').addClass('wait');
       remoteUserId = null;
     }
+    quiz_text.innerHTML = "일부 사용자가 회의를 이탈했습니다.";
   }
 
   /**
@@ -216,6 +219,7 @@ $(function () {
     });
 
     $body.removeClass('wait').addClass('connected');
+    quiz_text.innerHTML = remoteUserId + "님과 연결되었습니다.";
 
     if (isMobile && isSafari) {
       mediaHandler.playForIOS(remoteVideo);
@@ -333,52 +337,57 @@ $(function () {
         let today = new Date();
         socket.emit('sendTranslate', transcript, big, roomId, userId, today.toLocaleTimeString());
 
-        if(transcript.endsWith('레드')) {
-          if (highlight==1) {
+        if (transcript.endsWith('레드')) {
+          if (highlight == 1) {
             highlight = 0;
           }
           else {
             highlight = 1;
           }
         }
-        
+
         if (big) {
-          if (highlight==1) {
+          if (highlight == 1) {
             let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
             final_span.append(now_chat)
-            big = 0; }
+            big = 0;
+          }
 
-          else{
-            if(transcript.endsWith('레드')) {
+          else {
+            if (transcript.endsWith('레드')) {
               let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
               final_span.append(now_chat)
-              big = 0;}
+              big = 0;
+            }
             else {
               let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
               final_span.append(now_chat)
               big = 0;
-              }
             }
-          } 
+          }
+        }
         else {
-          if (highlight==1) {
+          if (highlight == 1) {
             let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
-            final_span.append(now_chat) }
-          
+            final_span.append(now_chat)
+          }
+
           else {
-            if(transcript.endsWith('레드')) {
+            if (transcript.endsWith('레드')) {
               let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat) }
+              final_span.append(now_chat)
+            }
 
             else {
-            let now_chat = "<div>" + "<p style=\"font-size:20px; \">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
-            finalTranscript += now_chat;
-            final_span.append(now_chat) }
+              let now_chat = "<div>" + "<p style=\"font-size:20px; \">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              finalTranscript += now_chat;
+              final_span.append(now_chat)
+            }
           }
         }
       }
@@ -421,9 +430,7 @@ $(function () {
    * @param string
    */
   function fireCommand(string) {
-    if (string.endsWith('레드')) {
-      console.log("레드");
-    } else if (string.endsWith('OX 퀴즈 시작')) {
+    if (string.endsWith('OX 퀴즈 시작')) {
       if (URL == "nope") {
         URL = "./q_model/";
         init();
