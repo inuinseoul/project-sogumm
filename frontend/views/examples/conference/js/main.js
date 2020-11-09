@@ -300,6 +300,7 @@ $(function () {
         final_span.innerHTML = capitalize(context[roomId]);
       }
     }
+    interim_span.innerHTML = linebreak(context[remoteUserId]);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
   });
 
@@ -397,14 +398,13 @@ $(function () {
       check_talk = transcript;
     }
     finalTranscript = capitalize(finalTranscript);
-    interim_span.innerHTML = linebreak(interimTranscript);
+    my_interim_span.innerHTML = linebreak(interimTranscript);
     $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
-    if (context[roomId] != finalTranscript) {
-      context[roomId] = finalTranscript;
-      context[userId] = interimTranscript;
-      socket.emit('sendScript', context);
-    }
+    context[roomId] = finalTranscript;
+    context[userId] = interimTranscript;
+    socket.emit('sendScript', context);
+
     let roomId_en = roomId + "_en";
     console.log('finalTranscript', finalTranscript);
     console.log('final_english', context[roomId_en]);
