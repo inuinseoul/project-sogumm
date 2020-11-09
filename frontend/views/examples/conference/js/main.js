@@ -14,6 +14,7 @@ let userId;
 let remoteUserId;
 let users = [];
 let translate = 0;
+const mediaHandler = new MediaHandler();
 
 $(function () {
   console.log('Loaded Main');
@@ -21,7 +22,6 @@ $(function () {
   let isOffer;
   let roomId;
 
-  const mediaHandler = new MediaHandler();
   const peerHandler = new PeerHandler({
     send: send,
   });
@@ -431,7 +431,7 @@ $(function () {
    */
   function fireCommand(string) {
     if (string.endsWith('OX 퀴즈 시작')) {
-      if (URL == "nope") {
+      if (URL == "./a_model/") {
         URL = "./q_model/";
         init();
         quiz_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
@@ -449,7 +449,7 @@ $(function () {
       }
     } else if (string.endsWith('OX 퀴즈 종료')) {
       if (URL == "./q_model/") {
-        URL = "nope";
+        URL = "./a_model/";
         init();
         let userId_qi = userId + "_qi";
         let userId_qc = userId + "_qc";
@@ -573,7 +573,6 @@ $(function () {
       socket.emit('enter', roomId, userId);
     } else {
       check = 1;
-      console.log("fuck");
       $createWrap.html(
         [
           '<div class="video_msg">',
@@ -673,14 +672,14 @@ $(function () {
 });
 
 // 모션인식 관련 코드
-let URL = "nope";
+let URL = "./a_model/";
 
 let model, webcam, labelContainer, maxPredictions;
 
 // Load the image model and setup the webcam
 async function init() {
-  const modelURL = "./q_model/" + "model.json";
-  const metadataURL = "./q_model/" + "metadata.json";
+  const modelURL = URL + "model.json";
+  const metadataURL = URL + "metadata.json";
 
   model = await tmImage.load(modelURL, metadataURL);
   maxPredictions = model.getTotalClasses();
@@ -694,7 +693,11 @@ async function init() {
 
 async function loop() {
   webcam.update(); // update the webcam frame
-  await predict();
+  if (URL == "./q_model/") {
+    await predict();
+  } else if (URL == "./a_model/") {
+    await predict2();
+  }
   window.requestAnimationFrame(loop);
 }
 
@@ -741,6 +744,27 @@ async function predict() {
   userId_p = userId + "_p";
   answers[userId_p] = classPrediction;
   socket.emit('sendAnswer', answers);
+}
+
+async function predict2() {
+  const prediction = await model.predict(webcam.canvas);
+  let remoteUserId_a = remoteUserId + "_a";
+  let userId_a = userId + "_a";
+  if (prediction[0].probability > prediction[1].probability) {
+    quiz_text.innerHTML = "어서오세요. " + userId + "님!";
+    $('#btn-camera').removeClass('active');
+    mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+    allquiz[userId_a] = 0;
+    if (allquiz[remoteUserId_a]) {
+      quiz_text.innerHTML = remoteUserId + "님이 자리를 비우셨어요.";
+    }
+  } else if (prediction[1].probability > prediction[0].probability) {
+    quiz_text.innerHTML = "자리를 이탈하셔서 자동으로 카메라를 닫습니다.";
+    $('#btn-camera').addClass('active');
+    mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+    allquiz[userId_a] = 1;
+  }
+  socket.emit('sendQuiz', allquiz);
 }
 
 // 볼륨 관련 코드
