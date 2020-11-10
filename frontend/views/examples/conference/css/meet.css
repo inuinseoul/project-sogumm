@@ -393,6 +393,10 @@ input:checked + .slider:before {
     fill: #ff6c4f;
 }
 
+#btn-en.active > svg {
+    fill: #ff6c4f;
+}
+
 #viewer_top #interim_span {
     color: white;
     font-size: 25px;

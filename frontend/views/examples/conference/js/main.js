@@ -9,12 +9,15 @@ let big = 0;
 let context = {};
 let allquiz = {};
 let answers = {};
-const socket = io();
+let animations = {};
+let language = 'ko-KR';
 let userId;
 let remoteUserId;
 let users = [];
 let translate = 0;
+const socket = io();
 const mediaHandler = new MediaHandler();
+const $videoWrap = $('#video-wrap');
 
 $(function () {
   console.log('Loaded Main');
@@ -47,7 +50,6 @@ $(function () {
   const $body = $('body');
   const $createWrap = $('#create-wrap');
   const $waitWrap = $('#wait-wrap');
-  const $videoWrap = $('#video-wrap');
   const $uniqueToken = $('#unique-token');
 
   /**
@@ -69,11 +71,25 @@ $(function () {
         mediaHandler[$this.hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
       });
 
-      $('#btn-lang').click(function () {
-        if (translate == 1) {
-          translate = 0;
+      $('#btn-en').click(function () {
+        const $this = $(this);
+        $this.toggleClass('active');
+        if (language == 'ko-KR') {
+          language = 'en-US';
         } else {
-          translate = 1;
+          language = 'ko-KR';
+        }
+        start();
+      });
+
+      $('#btn-lang').click(function () {
+        translate = (translate + 1) % 3;
+        if (translate == 0) {
+          $('#btn-lang').html("스크립트 (<strong>기본</strong>-영어-한글)");
+        } else if (translate == 1) {
+          $('#btn-lang').html("스크립트 (기본-<strong>영어</strong>-한글)");
+        } else if (translate == 2) {
+          $('#btn-lang').html("스크립트 (기본-영어-<strong>한글</strong>)");
         }
         socket.emit('sendScript', context);
       });
@@ -82,11 +98,23 @@ $(function () {
       start();
       $('#btn-camera').toggleClass('active');
       quiz_text.innerHTML = remoteUserId + "님과 연결되었습니다.";
-      console.log("ddds====ssdsd===");
       $('#btn-join').off();
     });
 
     $createWrap.slideUp(animationTime);
+  }
+
+  function overCapacity() {
+    console.log('overCapacity');
+
+    $waitWrap.html(
+      [
+        '<div class="video_msg room-info">',
+        '<p class="sg_black fc-td">인원 초과!<br />해당 방의 입장 가능한 인원이 초과되었습니다.</p>',
+        '<p id="btn-join" class="video_btn">PLEASE GO BACK</p>',
+        '</div>',
+      ].join('\n')
+    );
   }
 
   /**
@@ -99,7 +127,9 @@ $(function () {
     for (var user in userList) {
       users.push(userList[user])
     }
-    if (Object.size(userList) > 1) {
+    if (Object.size(userList) > 2) {
+      overCapacity();
+    } else if (Object.size(userList) > 1) {
       onDetectUser();
     }
   }
@@ -240,7 +270,6 @@ $(function () {
   const ONE_LINE = /\n/g;
 
   const recognition = new webkitSpeechRecognition();
-  const language = 'ko-KR';
   const $audio = document.querySelector('#audio');
   const $btnMic = document.querySelector('#btn-mic');
   const $resultWrap = document.querySelector('#result');
@@ -291,22 +320,39 @@ $(function () {
       context[key] = data[key];
     }
     let roomId_en = roomId + "_en";
-    if (translate) {
-      if (final_span.innerHTML != context[roomId_en]) {
-        final_span.innerHTML = context[roomId_en];
-      }
-    } else {
+    let roomId_ko = roomId + "_ko";
+    if (translate == 0) {
       if (final_span.innerHTML != capitalize(context[roomId])) {
         final_span.innerHTML = capitalize(context[roomId]);
+        $resultWrap.scrollTop = $resultWrap.scrollHeight;
+      }
+    } else if (translate == 1) {
+      if (final_span.innerHTML != context[roomId_en]) {
+        final_span.innerHTML = context[roomId_en];
+        $resultWrap.scrollTop = $resultWrap.scrollHeight;
+      }
+    } else if (translate == 2) {
+      if (final_span.innerHTML != context[roomId_ko]) {
+        final_span.innerHTML = context[roomId_ko];
+        $resultWrap.scrollTop = $resultWrap.scrollHeight;
       }
     }
-    interim_span.innerHTML = linebreak(context[remoteUserId]);
-    $resultWrap.scrollTop = $resultWrap.scrollHeight;
+
+    if (context[remoteUserId] != undefined) {
+      interim_span.innerHTML = linebreak(context[remoteUserId]);
+    }
+
   });
 
   socket.on('getQuiz', (data) => {
     for (var key in data) {
       allquiz[key] = data[key];
+    }
+  });
+
+  socket.on('getAnimation', (data) => {
+    for (var key in data) {
+      animations[key] = data[key];
     }
   });
 
@@ -351,7 +397,7 @@ $(function () {
           if (highlight == 1) {
             let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
-            final_span.append(now_chat)
+            final_span.append(now_chat);
             big = 0;
           }
 
@@ -359,13 +405,13 @@ $(function () {
             if (transcript.endsWith('레드')) {
               let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat)
+              final_span.append(now_chat);
               big = 0;
             }
             else {
               let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat)
+              final_span.append(now_chat);
               big = 0;
             }
           }
@@ -374,20 +420,20 @@ $(function () {
           if (highlight == 1) {
             let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
-            final_span.append(now_chat)
+            final_span.append(now_chat);
           }
 
           else {
             if (transcript.endsWith('레드')) {
               let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat)
+              final_span.append(now_chat);
             }
 
             else {
               let now_chat = "<div>" + "<p style=\"font-size:20px; \">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat)
+              final_span.append(now_chat);
             }
           }
         }
@@ -399,15 +445,12 @@ $(function () {
     }
     finalTranscript = capitalize(finalTranscript);
     my_interim_span.innerHTML = linebreak(interimTranscript);
-    $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
     context[roomId] = finalTranscript;
     context[userId] = interimTranscript;
     socket.emit('sendScript', context);
 
-    let roomId_en = roomId + "_en";
     console.log('finalTranscript', finalTranscript);
-    console.log('final_english', context[roomId_en]);
     console.log('interimTranscript', interimTranscript);
     fireCommand(check_talk);
   };
@@ -431,7 +474,7 @@ $(function () {
    */
   function fireCommand(string) {
     if (string.endsWith('OX 퀴즈 시작')) {
-      if (URL == "./a_model/") {
+      if (URL == "./m_model/") {
         URL = "./q_model/";
         init();
         quiz_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
@@ -449,7 +492,7 @@ $(function () {
       }
     } else if (string.endsWith('OX 퀴즈 종료')) {
       if (URL == "./q_model/") {
-        URL = "./a_model/";
+        URL = "./m_model/";
         init();
         let userId_qi = userId + "_qi";
         let userId_qc = userId + "_qc";
@@ -476,6 +519,15 @@ $(function () {
           quiz_text.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
         }
       }
+    } else if (string.endsWith('사랑')) {
+      let userId_heart = userId + "_heart";
+      animations[userId_heart] = 1;
+      socket.emit('sendAnimation', animations);
+      setTimeout(function () {
+        console.log("-");
+        animations[userId_heart] = 0;
+        socket.emit('sendAnimation', animations);
+      }, 3000); // 3초 후에 실행
     }
   }
 
@@ -602,12 +654,26 @@ $(function () {
       });
 
       $('#btn-lang').click(function () {
-        if (translate == 1) {
-          translate = 0;
-        } else {
-          translate = 1;
+        translate = (translate + 1) % 3;
+        if (translate == 0) {
+          $('#btn-lang').html("스크립트 (<strong>기본</strong>-영어-한글)");
+        } else if (translate == 1) {
+          $('#btn-lang').html("스크립트 (기본-<strong>영어</strong>-한글)");
+        } else if (translate == 2) {
+          $('#btn-lang').html("스크립트 (기본-영어-<strong>한글</strong>)");
         }
         socket.emit('sendScript', context);
+      });
+
+      $('#btn-en').click(function () {
+        const $this = $(this);
+        $this.toggleClass('active');
+        if (language == 'ko-KR') {
+          language = 'en-US';
+        } else {
+          language = 'ko-KR';
+        }
+        start();
       });
 
       init();
@@ -672,7 +738,7 @@ $(function () {
 });
 
 // 모션인식 관련 코드
-let URL = "./a_model/";
+let URL = "./m_model/";
 
 let model, webcam, labelContainer, maxPredictions;
 
@@ -695,7 +761,7 @@ async function loop() {
   webcam.update(); // update the webcam frame
   if (URL == "./q_model/") {
     await predict();
-  } else if (URL == "./a_model/") {
+  } else if (URL == "./m_model/") {
     await predict2();
   }
   window.requestAnimationFrame(loop);
@@ -727,7 +793,6 @@ async function predict() {
           quiz_text.innerHTML = "틀렸습니다. 정답은 O였습니다.";
         }
       } else if (allquiz[remoteUserId_qc] == 'x' || allquiz[remoteUserId_qc] == 'X') {
-        console.log(quiz_motion.innerHTML);
         if (quiz_motion.innerHTML == "의 정답은?  <strong>X</strong>") {
           quiz_text.innerHTML = "정답을 맞추셨습니다!";
         } else {
@@ -752,8 +817,6 @@ async function predict2() {
   let userId_a = userId + "_a";
   if (prediction[0].probability > prediction[1].probability) {
     quiz_text.innerHTML = "어서오세요. " + userId + "님!";
-    $('#btn-camera').removeClass('active');
-    mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
     allquiz[userId_a] = 0;
     if (allquiz[remoteUserId_a]) {
       quiz_text.innerHTML = remoteUserId + "님이 자리를 비우셨어요.";
@@ -862,6 +925,21 @@ function init2() {
       }
       if (sum_height > 1600) {
         big = 1;
+      }
+
+      let remoteUserId_heart = remoteUserId + "_heart";
+      if (animations[remoteUserId_heart]) {
+        // 요소 추가하기
+        if (!($('#animation').length)) {
+          console.log("create heart-animation");
+          $videoWrap.append('<img src="css/heart.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+        }
+      } else {
+        // 요소 제거하기
+        if (($('#animation').length)) {
+          console.log("remove heart-animation");
+          $('img').remove('#animation');
+        }
       }
     };
 

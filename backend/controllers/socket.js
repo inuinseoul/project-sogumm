@@ -14,6 +14,7 @@ module.exports = (http) => {
   let context = {};
   let allquiz = {};
   let answers = {};
+  let animations = {};
 
   /**
    * SocketId로 방을 탐색 합니다.
@@ -116,16 +117,39 @@ module.exports = (http) => {
       io.emit('getAnswer', answers);
     });
 
-    socket.on('sendTranslate', (korea, big, roomId, userId, today) => {
+    socket.on('sendAnimation', (data) => {
+      for (var key in data) {
+        animations[key] = data[key];
+      }
+      io.emit('getAnimation', animations);
+    });
+
+    socket.on('sendTranslate', (text, big, roomId, userId, today, language) => {
       let roomId_en = roomId + "_en";
+      let roomId_ko = roomId + "_ko";
+
       if (context[roomId_en] == undefined) {
         context[roomId_en] = "";
       }
-      translate(String(korea), { to: 'en' }).then(res => {
+      translate(String(text), { to: 'en' }).then(res => {
         if (big) {
           context[roomId_en] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
         } else {
           context[roomId_en] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+        }
+        io.emit('getScript', context);
+      }).catch(err => {
+        console.error(err);
+      })
+
+      if (context[roomId_ko] == undefined) {
+        context[roomId_ko] = "";
+      }
+      translate(String(text), { to: 'ko' }).then(res => {
+        if (big) {
+          context[roomId_ko] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+        } else {
+          context[roomId_ko] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
         }
         io.emit('getScript', context);
       }).catch(err => {

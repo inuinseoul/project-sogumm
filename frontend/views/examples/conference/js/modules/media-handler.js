@@ -38,7 +38,6 @@ function MediaHandler() {
    * @param callback
    */
   function resumeVideo(callback) {
-    console.log('resumeVideo', arguments);
     localStream.getVideoTracks()[0].enabled = true;
     callback && callback();
   }
@@ -71,7 +70,7 @@ function MediaHandler() {
   function playForIOS(videoEl) {
     videoEl.setAttribute('playsinline', true);
     videoEl.setAttribute('controls', true);
-    setTimeout(function() {
+    setTimeout(function () {
       videoEl.removeAttribute('controls');
     }, 1);
   }
