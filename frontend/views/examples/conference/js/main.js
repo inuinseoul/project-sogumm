@@ -395,7 +395,7 @@ $(function () {
 
         if (big) {
           if (highlight == 1) {
-            let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+            let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
             final_span.append(now_chat);
             big = 0;
@@ -403,13 +403,13 @@ $(function () {
 
           else {
             if (transcript.endsWith('레드')) {
-              let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
               final_span.append(now_chat);
               big = 0;
             }
             else {
-              let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
               final_span.append(now_chat);
               big = 0;
@@ -418,20 +418,20 @@ $(function () {
         }
         else {
           if (highlight == 1) {
-            let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+            let now_chat = "<div>" + "<p style=\"color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
             final_span.append(now_chat);
           }
 
           else {
             if (transcript.endsWith('레드')) {
-              let now_chat = "<div>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px; color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              let now_chat = "<div>" + "<p style=\"color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
               final_span.append(now_chat);
             }
 
             else {
-              let now_chat = "<div>" + "<p style=\"font-size:20px; \">" + '[' + userId + "] " + transcript + "</p>" + "<p style=\"font-size:20px;\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+              let now_chat = "<div>" + "<p style=\"\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
               final_span.append(now_chat);
             }
