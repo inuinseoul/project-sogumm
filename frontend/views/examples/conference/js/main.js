@@ -532,6 +532,15 @@ $(function () {
         animations[userId_heart] = 0;
         socket.emit('sendAnimation', animations);
       }, 3000); // 3초 후에 실행
+    } else if (string.endsWith('집중')) {
+      let userId_focus = userId + "_focus";
+      animations[userId_focus] = 1;
+      socket.emit('sendAnimation', animations);
+      setTimeout(function () {
+        console.log("-");
+        animations[userId_focus] = 0;
+        socket.emit('sendAnimation', animations);
+      }, 2000); // 2초 후에 실행
     }
   }
 
@@ -900,19 +909,25 @@ function init2() {
       }
 
       let remoteUserId_heart = remoteUserId + "_heart";
+      let remoteUserId_focus = remoteUserId + "_focus";
       if (animations[remoteUserId_heart]) {
-        // 요소 추가하기
         if (!($('#animation').length)) {
           console.log("create heart-animation");
           $videoWrap.append('<img src="css/heart.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
         }
+      } else if (animations[remoteUserId_focus]) {
+        if (!($('#animation').length)) {
+          console.log("create heart-animation");
+          $videoWrap.append('<img src="css/focus.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+        }
       } else {
-        // 요소 제거하기
         if (($('#animation').length)) {
-          console.log("remove heart-animation");
+          console.log("remove animation");
           $('img').remove('#animation');
         }
       }
+
+
     };
 
     timerId = setInterval(drawAlt, 5);
