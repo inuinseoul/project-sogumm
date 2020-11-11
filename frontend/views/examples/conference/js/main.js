@@ -82,15 +82,16 @@ $(function () {
         start();
       });
 
-      $('#btn-lang').click(function () {
-        translate = (translate + 1) % 3;
-        if (translate == 0) {
-          $('#btn-lang').html("스크립트 (<strong>기본</strong>-영어-한글)");
-        } else if (translate == 1) {
-          $('#btn-lang').html("스크립트 (기본-<strong>영어</strong>-한글)");
-        } else if (translate == 2) {
-          $('#btn-lang').html("스크립트 (기본-영어-<strong>한글</strong>)");
-        }
+      $('#btn-lang-none').click(function () {
+        translate = 0;
+        socket.emit('sendScript', context);
+      });
+      $('#btn-lang-en').click(function () {
+        translate = 1;
+        socket.emit('sendScript', context);
+      });
+      $('#btn-lang-kr').click(function () {
+        translate = 2;
         socket.emit('sendScript', context);
       });
 
@@ -653,15 +654,16 @@ $(function () {
         mediaHandler[$this.hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
       });
 
-      $('#btn-lang').click(function () {
-        translate = (translate + 1) % 3;
-        if (translate == 0) {
-          $('#btn-lang').html("스크립트 (<strong>기본</strong>-영어-한글)");
-        } else if (translate == 1) {
-          $('#btn-lang').html("스크립트 (기본-<strong>영어</strong>-한글)");
-        } else if (translate == 2) {
-          $('#btn-lang').html("스크립트 (기본-영어-<strong>한글</strong>)");
-        }
+      $('#btn-lang-none').click(function () {
+        translate = 0;
+        socket.emit('sendScript', context);
+      });
+      $('#btn-lang-en').click(function () {
+        translate = 1;
+        socket.emit('sendScript', context);
+      });
+      $('#btn-lang-kr').click(function () {
+        translate = 2;
         socket.emit('sendScript', context);
       });
 
