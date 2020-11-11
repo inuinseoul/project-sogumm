@@ -76,10 +76,13 @@ $(function () {
         $this.toggleClass('active');
         if (language == 'ko-KR') {
           language = 'en-US';
+          alert("음성인식 기준이 영어로 변경됩니다.");
         } else {
           language = 'ko-KR';
+          alert("음성인식 기준이 한글로 변경됩니다.");
         }
-        start();
+        recognition.lang = language;
+        recognition.stop();
       });
 
       $('#btn-lang-none').click(function () {
@@ -672,10 +675,13 @@ $(function () {
         $this.toggleClass('active');
         if (language == 'ko-KR') {
           language = 'en-US';
+          alert("음성인식 기준이 영어로 변경됩니다.");
         } else {
           language = 'ko-KR';
+          alert("음성인식 기준이 한글로 변경됩니다.");
         }
-        start();
+        recognition.lang = language;
+        recognition.stop();
       });
 
       init();
