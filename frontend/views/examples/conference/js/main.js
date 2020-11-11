@@ -478,7 +478,7 @@ $(function () {
    */
   function fireCommand(string) {
     if (string.endsWith('OX 퀴즈 시작')) {
-      if (URL == "./m_model/") {
+      if (URL == "./a_model/") {
         URL = "./q_model/";
         init();
         quiz_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
@@ -496,7 +496,7 @@ $(function () {
       }
     } else if (string.endsWith('OX 퀴즈 종료')) {
       if (URL == "./q_model/") {
-        URL = "./m_model/";
+        URL = "./a_model/";
         init();
         let userId_qi = userId + "_qi";
         let userId_qc = userId + "_qc";
@@ -719,7 +719,7 @@ $(function () {
 });
 
 // 모션인식 관련 코드
-let URL = "./m_model/";
+let URL = "./a_model/";
 
 let model, webcam, labelContainer, maxPredictions;
 
@@ -742,7 +742,7 @@ async function loop() {
   webcam.update(); // update the webcam frame
   if (URL == "./q_model/") {
     await predict();
-  } else if (URL == "./m_model/") {
+  } else if (URL == "./a_model/") {
     await predict2();
   }
   window.requestAnimationFrame(loop);
