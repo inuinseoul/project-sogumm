@@ -21,3 +21,6 @@
 .fc-td {
     transition-duration: 1s !important; 
 }
+.cursor-p {
+    cursor: pointer;
+}

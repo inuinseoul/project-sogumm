@@ -35,9 +35,9 @@ function setNightMode(event) {
     }
 }
 
-function showOption(e) {
-    e.stopPropagation();
-    alert(e.target.nodeName);
-}
-document.getElementById('final_span').addEventListener('click', showOption);
+// function showOption(e) {
+//     e.stopPropagation();
+//     alert(e.target.nodeName);
+// }
+// document.getElementById('final_span').addEventListener('click', showOption);
 document.getElementsByClassName('switch')[0].addEventListener('click', setNightMode)

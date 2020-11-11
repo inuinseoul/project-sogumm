@@ -134,11 +134,140 @@ input:checked + .slider:before {
     background-position-y: top;
     background-position-x: 50%;    
     /* box-shadow: ; */
+
+    position: relative;
+}
+#side_btns {
+    margin: 0 auto;
+    width: 90%;
+    height: 50px;
+    
+    display: flex;
+    /* background-color: red; */
+    flex-direction: row;
+
+    /* border-radius: 5px; */
+
+    position: absolute;
+    bottom: 50px;
+    /* bottom: 5%; */
+    left: 5%;
+    /* background-color: royalblue; */
+    /* border: 1px solid #ff875c; */
+}
+#side_btns > div {
+    width: 50%;
+    height: 100%;
+
+    /* background-color: ; */
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+}
+/* #download, #language {
+    border: 1px solid #ff875c;
+    background-color: #ff875c;
+} */
+#download {
+    border-right: none;
+    border-radius: 5px 0px 0px 5px;
+}
+#language {
+    border-left: none;
+    border-radius: 0px 5px 5px 0px;
+}
+/* Dropup Button */
+.dropbtn {
+    background-color: rgba(255, 255, 255, 0);
+    width: 100%;
+    color: white;
+    padding: 16px;
+    font-size: 18px;
+    border: none;
+    outline: none;
+
+    margin-top: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: #ff875c;
+
+    z-index: 130;
+
+    transition: all 0.3s;
+}
+.dropup {
+    position: relative;
+    display: block;
+}
+.dropup hr {
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #f3f3f3;
+}
+.dropup-content {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    background-color: rgba(255, 255, 255, 1);
+    /* border: 1px solid #ff875c; */
+    width: 100%;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+    z-index: 140;
+    
+    border-radius: 5px 5px 5px 5px;
+
+    overflow: hidden;
+}
+.dropup-content p {
+    display: block;
+    padding: 13px;
+    margin: 0;
+    color: black;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+
+    transition: all 0.3s;
+}
+.dropup-content p:hover {
+    background-color: #f3f3f3;
+}
+.dropup:hover .dropup-content {
+    display: block;
+}
+.dropup:hover .dropbtn {
+    background-color: rgba(255, 255, 255, 1);
+    color: #ff6c4f;
+}
+
+#my_interim_span {
+    display: block;
+    width: 88%;
+    height: 35px;
+    /* background-color: red; */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+    direction: rtl;
+    font-size: 20px;
+    border-bottom: 1px solid #dddd;
+
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    z-index: 120;
 }
 #result {
     /* background-color: rebeccapurple; */
     width: 90%;
-    height: 80%;
+    height: 75%;
  
     margin: 0 auto;
     margin-top: 5%;
@@ -558,3 +687,4 @@ input:checked + .slider:before {
 #night_filter.filter_off {
     background-color: rgba(0, 0, 0, 0);
 }
+
