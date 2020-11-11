@@ -577,27 +577,6 @@ $(function () {
   }
 
   /**
-   * 문자를 음성으로 읽어 줍니다.
-   * 지원: 크롬, 사파리, 오페라, 엣지
-   */
-  function textToSpeech(text) {
-    console.log('textToSpeech', arguments);
-
-    // speechSynthesis options
-    // const u = new SpeechSynthesisUtterance();
-    // u.text = 'Hello world';
-    // u.lang = 'en-US';
-    // u.rate = 1.2;
-    // u.onend = function(event) {
-    //   log('Finished in ' + event.elapsedTime + ' seconds.');
-    // };
-    // speechSynthesis.speak(u);
-
-    // simple version
-    speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-  }
-
-  /**
    * 초기 설정
    */
   function initialize() {
@@ -726,22 +705,7 @@ $(function () {
     document.body.removeChild(fileDownload);
   })
 
-  /**
-   * 초기 바인딩
-   */
-  function initialize2() {
-    const $btnTTS = document.querySelector('#btn-tts');
-    const defaultMsg = '전 음성 인식된 글자를 읽습니다.';
-
-    $btnTTS.addEventListener('click', () => {
-      const text = final_span.innerText || defaultMsg;
-      textToSpeech(text);
-    });
-
-  }
-
   initialize();
-  initialize2();
   init2();
 });
 
