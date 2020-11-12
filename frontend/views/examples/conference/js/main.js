@@ -753,10 +753,10 @@ async function predict() {
   let remoteUserId_qc = remoteUserId + "_qc";
   if (allquiz[remoteUserId_qi]) {
     quiz_text.innerHTML = '"' + allquiz[remoteUserId_qi] + '"';
-    if (prediction[0].probability > 0.60) {
+    if (prediction[0].probability > 0.80) {
       classPrediction = "O";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
-    } else if (prediction[1].probability > 0.60) {
+    } else if (prediction[1].probability > 0.80) {
       classPrediction = "X";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
     } else {
@@ -788,14 +788,18 @@ async function predict() {
   userId_p = userId + "_p";
   answers[userId_p] = classPrediction;
   socket.emit('sendAnswer', answers);
+  if (!(allquiz[remoteUserId_qi])) {
+    URL = './q_model/';
+    init();
+  }
 }
 
 async function predict2() {
   const prediction = await model.predict(webcam.canvas);
   let remoteUserId_a = remoteUserId + "_a";
   let userId_a = userId + "_a";
+  let remoteUserId_qi = remoteUserId + "_qi";
   if (prediction[0].probability > prediction[1].probability) {
-    quiz_text.innerHTML = "어서오세요. " + userId + "님!";
     allquiz[userId_a] = 0;
     if (allquiz[remoteUserId_a]) {
       quiz_text.innerHTML = remoteUserId + "님이 자리를 비우셨어요.";
@@ -809,6 +813,10 @@ async function predict2() {
     allquiz[userId_a] = 1;
   }
   socket.emit('sendQuiz', allquiz);
+  if (allquiz[remoteUserId_qi]) {
+    URL = './q_model/';
+    init();
+  }
 }
 
 // 볼륨 관련 코드
