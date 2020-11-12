@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import url(https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap);
 
 * {
@@ -389,6 +389,8 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
     transform: translateX(-100%);
 }
 #cts_translate {
+    padding-top: 130px;
+    padding-bottom: 400px;
     /* padding-bottom: 250px; */
     /* background-color: red; */
 }
@@ -397,7 +399,7 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
     /* background-color: salmon; */
     left: 10%;
 
-    top: 50%;
+    top: 40%;
     transform: translateY(-50%);
 }
 #img_translate {
@@ -406,22 +408,67 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
     left: 90%;
     transform: translateX(-100%);
 }
-
 #cts_footer {
-    /* height: 450px; */
     background-color: #ff6c4f;
     width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
     overflow: hidden;
-    margin: 0;
 }
-#cts_footer div {
+#cts_footer > p {
+    font-size: 25px;
+    color: white;
+}
+#footer_icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+
     width: 80%;
-    margin: auto;
+
+    margin: 0 auto;
 }
-#cts_footer img {
-    width: 100%;
+#footer_icons .iconbox {
+    width: 40px;
+    height: 40px;
+
+    margin-right: 8px;
+    margin-left: 8px;
+    padding: 0;
+    /* background-color: red; */
 }
 
+#bicon_razen {
+    background-image: url('./razenicon-o.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    transition-duration: 2s;
+}
+#bicon_razen:hover {
+    background-image: url('./razenicon-c.png');
+}
+#bicon_aischool {
+    background-image: url('./aischoolicon-o.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    transition-duration: 2s;
+}
+#bicon_aischool:hover {
+    background-image: url('./aischoolicon-c.png');
+}
+#bicon_github {
+    background-image: url('./githubicon-o.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    transition-duration: 2s;
+}
+#bicon_github:hover {
+    background-image: url('./githubicon-c.png');
+}
 
 /*
 #
