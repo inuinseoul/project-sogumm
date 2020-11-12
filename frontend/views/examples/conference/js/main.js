@@ -506,7 +506,7 @@ $(function () {
           } else if (answers[remoteUserId_p] == 'X') {
             quiz_text.innerHTML = "상대방이 정답을 맞추지 못했네요.";
           } else {
-            quiz_text.innerHTML = "상대방의 동작이 제대로 인식되지 못한 것 같아요.";
+            quiz_text.innerHTML = "상대방이 없거나 상대방의 동작이 제대로 인식되지 못한 것 같아요.";
           }
         } else if ((allquiz[userId_qc] == 'X') || (allquiz[userId_qc] == 'x')) {
           if (answers[remoteUserId_p] == 'X') {
@@ -789,7 +789,7 @@ async function predict() {
   answers[userId_p] = classPrediction;
   socket.emit('sendAnswer', answers);
   if (!(allquiz[remoteUserId_qi])) {
-    URL = './q_model/';
+    URL = './a_model/';
     init();
   }
 }
