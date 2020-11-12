@@ -104,6 +104,7 @@ $(function () {
       $('#btn-camera').toggleClass('active');
       quiz_text.innerHTML = remoteUserId + "님과 연결되었습니다.";
       $('#btn-join').off();
+      $btnMic.className = 'on';
     });
 
     $createWrap.slideUp(animationTime);
@@ -397,7 +398,7 @@ $(function () {
           if (highlight == 1) {
             let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
-            final_span.append(now_chat);
+            final_span.innerHTML = finalTranscript;
             big = 0;
           }
 
@@ -405,13 +406,13 @@ $(function () {
             if (transcript.endsWith('레드')) {
               let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat);
+              final_span.innerHTML = finalTranscript;
               big = 0;
             }
             else {
               let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat);
+              final_span.innerHTML = finalTranscript;
               big = 0;
             }
           }
@@ -420,20 +421,20 @@ $(function () {
           if (highlight == 1) {
             let now_chat = "<div>" + "<p style=\"color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
-            final_span.append(now_chat);
+            final_span.innerHTML = finalTranscript;
           }
 
           else {
             if (transcript.endsWith('레드')) {
               let now_chat = "<div>" + "<p style=\"color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat);
+              final_span.innerHTML = finalTranscript;
             }
 
             else {
               let now_chat = "<div>" + "<p style=\"\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
               finalTranscript += now_chat;
-              final_span.append(now_chat);
+              final_span.innerHTML = finalTranscript;
             }
           }
         }
