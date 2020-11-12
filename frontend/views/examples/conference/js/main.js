@@ -18,6 +18,7 @@ let translate = 0;
 const socket = io();
 const mediaHandler = new MediaHandler();
 const $videoWrap = $('#video-wrap');
+const $btnCamera = document.querySelector('#btn-camera');
 
 $(function () {
   console.log('Loaded Main');
@@ -269,15 +270,9 @@ $(function () {
     return false;
   }
 
-  const FIRST_CHAR = /\S/;
-  const TWO_LINE = /\n\n/g;
-  const ONE_LINE = /\n/g;
-
   const recognition = new webkitSpeechRecognition();
-  const $audio = document.querySelector('#audio');
   const $btnMic = document.querySelector('#btn-mic');
   const $resultWrap = document.querySelector('#result');
-  const $iconMusic = document.querySelector('#icon-music');
 
   let isRecognizing = false;
   let ignoreEndProcess = false;
@@ -292,6 +287,7 @@ $(function () {
   recognition.onstart = function () {
     console.log('onstart', arguments);
     isRecognizing = true;
+    mediaHandler['unmuteAudio']();
     $btnMic.className = 'on';
   };
 
@@ -301,12 +297,12 @@ $(function () {
   recognition.onend = function () {
     console.log('onend', arguments);
     isRecognizing = false;
-
     if (ignoreEndProcess) {
       return false;
     }
 
     // DO end process
+    mediaHandler['muteAudio']();
     $btnMic.className = 'off';
     if (!finalTranscript) {
       console.log('empty finalTranscript');
@@ -557,9 +553,10 @@ $(function () {
    * @param {string} s
    */
   function capitalize(s) {
-    return s.replace(FIRST_CHAR, function (m) {
-      return m.toUpperCase();
-    });
+    if (s == undefined) {
+      return "";
+    }
+    return s;
   }
 
   /**
@@ -570,7 +567,6 @@ $(function () {
       recognition.stop();
       return;
     }
-    socket.emit('sendScript', context);
     recognition.lang = language;
     recognition.start();
     ignoreEndProcess = false;
@@ -677,6 +673,7 @@ $(function () {
       $('#btn-start').off();
       start();
       $('#btn-camera').toggleClass('active');
+      $btnMic.className = 'on';
     });
 
 
@@ -804,8 +801,10 @@ async function predict2() {
     }
   } else if (prediction[1].probability > prediction[0].probability) {
     quiz_text.innerHTML = "자리를 이탈하셔서 자동으로 카메라를 닫습니다.";
-    $('#btn-camera').addClass('active');
-    mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+    if ($btnCamera.className != 'active') {
+      $('#btn-camera').addClass('active');
+      mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+    }
     allquiz[userId_a] = 1;
   }
   socket.emit('sendQuiz', allquiz);
