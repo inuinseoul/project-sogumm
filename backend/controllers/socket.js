@@ -5,6 +5,7 @@
 
 //번역기 모듈
 const translate = require('@vitalets/google-translate-api');
+const { hi } = require('@vitalets/google-translate-api/languages');
 
 module.exports = (http) => {
   const io = require('socket.io')(http);
@@ -124,7 +125,7 @@ module.exports = (http) => {
       io.emit('getAnimation', animations);
     });
 
-    socket.on('sendTranslate', (text, big, roomId, userId, today, language) => {
+    socket.on('sendTranslate', (text, big, roomId, userId, today, highlight) => {
       let roomId_en = roomId + "_en";
       let roomId_ko = roomId + "_ko";
 
@@ -133,9 +134,17 @@ module.exports = (http) => {
       }
       translate(String(text), { to: 'en' }).then(res => {
         if (big) {
-          context[roomId_en] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          if (highlight) {
+            context[roomId_en] += "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0);\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          } else {
+            context[roomId_en] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          }
         } else {
-          context[roomId_en] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          if (highlight) {
+            context[roomId_en] += "<div>" + "<p style=\"color:rgb(255, 0, 0);\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          } else {
+            context[roomId_en] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          }
         }
         io.emit('getScript', context);
       }).catch(err => {
@@ -147,9 +156,19 @@ module.exports = (http) => {
       }
       translate(String(text), { to: 'ko' }).then(res => {
         if (big) {
-          context[roomId_ko] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          if (highlight) {
+            context[roomId_ko] += "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0);\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          } else {
+            context[roomId_ko] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          }
         } else {
-          context[roomId_ko] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          if (highlight) {
+            context[roomId_ko] += "<div>" + "<p style=\"color:rgb(255, 0, 0);\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          } else {
+            context[roomId_ko] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+          }
+
+
         }
         io.emit('getScript', context);
       }).catch(err => {

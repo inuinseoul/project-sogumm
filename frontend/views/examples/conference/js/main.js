@@ -15,6 +15,10 @@ let userId;
 let remoteUserId;
 let users = [];
 let translate = 0;
+let quizing = 0;
+let sound_list = Array.from({ length: 100 }, () => 1200);
+let sound_list_i = 0;
+let roomId;
 const socket = io();
 const mediaHandler = new MediaHandler();
 const $videoWrap = $('#video-wrap');
@@ -24,7 +28,6 @@ $(function () {
   console.log('Loaded Main');
 
   let isOffer;
-  let roomId;
 
   const peerHandler = new PeerHandler({
     send: send,
@@ -224,7 +227,7 @@ $(function () {
    * @param stream
    */
   function onLocalStream(stream) {
-    $videoWrap.prepend('<video id="local-video" muted="muted" autoplay />');
+    $videoWrap.prepend('<video id="local-video" muted="muted" autoplay/>');
     const localVideo = document.querySelector('#local-video');
     mediaHandler.setVideoStream({
       type: 'local',
@@ -383,7 +386,6 @@ $(function () {
 
       if (event.results[i].isFinal) {
         let today = new Date();
-        socket.emit('sendTranslate', transcript, big, roomId, userId, today.toLocaleTimeString());
 
         if (transcript.endsWith('레드')) {
           if (highlight == 1) {
@@ -393,49 +395,32 @@ $(function () {
             highlight = 1;
           }
         }
+        socket.emit('sendTranslate', transcript, big, roomId, userId, today.toLocaleTimeString(), highlight);
 
         if (big) {
           if (highlight == 1) {
-            let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+            let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0);\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
             final_span.innerHTML = finalTranscript;
             big = 0;
           }
-
           else {
-            if (transcript.endsWith('레드')) {
-              let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
-              finalTranscript += now_chat;
-              final_span.innerHTML = finalTranscript;
-              big = 0;
-            }
-            else {
-              let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
-              finalTranscript += now_chat;
-              final_span.innerHTML = finalTranscript;
-              big = 0;
-            }
+            let now_chat = "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
+            finalTranscript += now_chat;
+            final_span.innerHTML = finalTranscript;
+            big = 0;
           }
         }
         else {
           if (highlight == 1) {
-            let now_chat = "<div>" + "<p style=\"color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
+            let now_chat = "<div>" + "<p style=\"color:rgb(255, 0, 0);\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
             finalTranscript += now_chat;
             final_span.innerHTML = finalTranscript;
           }
-
           else {
-            if (transcript.endsWith('레드')) {
-              let now_chat = "<div>" + "<p style=\"color:rgb(255, 0, 0)\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
-              finalTranscript += now_chat;
-              final_span.innerHTML = finalTranscript;
-            }
-
-            else {
-              let now_chat = "<div>" + "<p style=\"\">" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
-              finalTranscript += now_chat;
-              final_span.innerHTML = finalTranscript;
-            }
+            let now_chat = "<div>" + "<p>" + userId + ": " + transcript + "</p>" + "<p>" + today.toLocaleTimeString() + "</p>" + "</div>";
+            finalTranscript += now_chat;
+            final_span.innerHTML = finalTranscript;
           }
         }
       }
@@ -446,6 +431,7 @@ $(function () {
     }
     finalTranscript = capitalize(finalTranscript);
     my_interim_span.innerHTML = linebreak(interimTranscript);
+    $resultWrap.scrollTop = $resultWrap.scrollHeight;
 
     context[roomId] = finalTranscript;
     context[userId] = interimTranscript;
@@ -475,12 +461,12 @@ $(function () {
    */
   function fireCommand(string) {
     if (string.endsWith('OX 퀴즈 시작')) {
-      if (URL == "./a_model/") {
-        URL = "./q_model/";
+      if (quizing == 0) {
+        quizing = 1;
         init();
         quiz_text.innerHTML = "퀴즈 출제중! 마감하려면 'OX 퀴즈 종료'라고 말하세요.";
-        let userId_qi = userId + "_qi";
-        let userId_qc = userId + "_qc";
+        let userId_qi = roomId + userId + "_qi";
+        let userId_qc = roomId + userId + "_qc";
         allquiz[userId_qi] = prompt('퀴즈 내용을 입력해주세요');
         while ((allquiz[userId_qi] == null) || (allquiz[userId_qi] == "")) {
           allquiz[userId_qi] = prompt('퀴즈 내용을 입력해주세요 (최소 한글자를 입력해야 합니다.)');
@@ -492,14 +478,14 @@ $(function () {
         socket.emit('sendQuiz', allquiz);
       }
     } else if (string.endsWith('OX 퀴즈 종료')) {
-      if (URL == "./q_model/") {
-        URL = "./a_model/";
+      if (quizing) {
+        quizing = 0;
         init();
-        let userId_qi = userId + "_qi";
-        let userId_qc = userId + "_qc";
+        let userId_qi = roomId + userId + "_qi";
+        let userId_qc = roomId + userId + "_qc";
         allquiz[userId_qi] = null;
         socket.emit('sendQuiz', allquiz);
-        let remoteUserId_p = remoteUserId + "_p";
+        let remoteUserId_p = roomId + remoteUserId + "_p";
         if ((allquiz[userId_qc] == 'O') || (allquiz[userId_qc] == 'o')) {
           if (answers[remoteUserId_p] == 'O') {
             quiz_text.innerHTML = "상대방이 정답을 맞췄습니다!";
@@ -749,18 +735,18 @@ async function loop() {
 async function predict() {
   const prediction = await model.predict(webcam.canvas);
   let classPrediction = "";
-  let remoteUserId_qi = remoteUserId + "_qi";
-  let remoteUserId_qc = remoteUserId + "_qc";
+  let remoteUserId_qi = roomId + remoteUserId + "_qi";
+  let remoteUserId_qc = roomId + remoteUserId + "_qc";
   if (allquiz[remoteUserId_qi]) {
     quiz_text.innerHTML = '"' + allquiz[remoteUserId_qi] + '"';
-    if (prediction[0].probability > 0.80) {
+    if (prediction[0].probability > 0.95) {
       classPrediction = "O";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
-    } else if (prediction[1].probability > 0.80) {
+    } else if (prediction[1].probability > 0.95) {
       classPrediction = "X";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
     } else {
-      classPrediction = "No Detection : <strong>" + prediction[2].probability.toFixed(2) + "</strong>";
+      classPrediction = '의 정답은?  ' + "<strong>" + "No Detection" + "</strong>";
       quiz_motion.innerHTML = classPrediction;
     }
   } else {
@@ -785,7 +771,7 @@ async function predict() {
       quiz_motion.innerHTML = "";
     }
   }
-  userId_p = userId + "_p";
+  userId_p = roomId + userId + "_p";
   answers[userId_p] = classPrediction;
   socket.emit('sendAnswer', answers);
   if (!(allquiz[remoteUserId_qi])) {
@@ -796,21 +782,21 @@ async function predict() {
 
 async function predict2() {
   const prediction = await model.predict(webcam.canvas);
-  let remoteUserId_a = remoteUserId + "_a";
-  let userId_a = userId + "_a";
-  let remoteUserId_qi = remoteUserId + "_qi";
-  if (prediction[0].probability > prediction[1].probability) {
-    allquiz[userId_a] = 0;
-    if (allquiz[remoteUserId_a]) {
-      quiz_text.innerHTML = remoteUserId + "님이 자리를 비우셨어요.";
-    }
-  } else if (prediction[1].probability > prediction[0].probability) {
+  let remoteUserId_a = roomId + remoteUserId + "_a";
+  let userId_a = roomId + userId + "_a";
+  let remoteUserId_qi = roomId + remoteUserId + "_qi";
+  if (prediction[1].probability > 0.99) {
     quiz_text.innerHTML = "자리를 이탈하셔서 자동으로 카메라를 닫습니다.";
     if ($btnCamera.className != 'active') {
       $('#btn-camera').addClass('active');
       mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
     }
     allquiz[userId_a] = 1;
+  } else {
+    allquiz[userId_a] = 0;
+    if (allquiz[remoteUserId_a]) {
+      quiz_text.innerHTML = remoteUserId + "님이 자리를 비우셨어요.";
+    }
   }
   socket.emit('sendQuiz', allquiz);
   if (allquiz[remoteUserId_qi]) {
@@ -908,13 +894,20 @@ function init2() {
     var drawAlt = function () {
       analyser.getByteFrequencyData(dataArrayAlt);
 
+      let average = sound_list.reduce((sum, el) => sum + el, 0) / sound_list.length;
+
       var sum_height = 0;
       for (var key in dataArrayAlt) {
         sum_height += dataArrayAlt[key];
       }
-      if (sum_height > 1600) {
+
+      if (sum_height > (average + 400)) {
         big = 1;
+      } else if (sum_height > 500) {
+        sound_list[sound_list_i] = sum_height;
+        sound_list_i = (sound_list_i + 1) % 100;
       }
+      // btn_sound_point.innerHTML = "현재수치: " + sum_height;
 
       let remoteUserId_heart = remoteUserId + "_heart";
       let remoteUserId_focus = remoteUserId + "_focus";
@@ -934,8 +927,6 @@ function init2() {
           $('img').remove('#animation');
         }
       }
-
-
     };
 
     timerId = setInterval(drawAlt, 5);
