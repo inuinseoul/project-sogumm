@@ -7,19 +7,25 @@
     <title>SOGUMM</title>
 
     <link rel='stylesheet' href='/css/main3.css' />
+    <link rel='stylesheet' href='/css/sidebar.css' />
+    
     <script type='text/javascript'>
-        // function changeBar() {
-        //     var el = document.getElementById('sidebar');
-        //     var cl = el.className;
-
-        //     // document.write('hello')
-        //     if(cl == 'hide') {
-        //         el.className = 'show'
-        //     }
-        //     else {
-        //         el.className = 'hide'
-        //     }
-        // }
+        function changeBar() {
+            var el = document.getElementById('sidebar');
+            var cl = el.className;
+            
+            // document.write('hello')
+            if(cl == 'hide') {
+                el.className = 'show';
+            }
+            else {
+                el.className = 'hide';
+            }
+        }
+        function toggleInfo() {
+            var el = document.getElementById('cts_stt_info');
+            el.classList.toggle('open');
+        }
     </script>
     <script src="/js/lib/inherit.js"></script>
     <script src="/js/lib/jquery.js"></script>
@@ -29,11 +35,38 @@
 </head>
 
 <body>
+    
+    <div id='sidebar' class='hide'>
+        <div id="sidebar_wrap">
+            <div>
+                <p>LINK</p>
+                <hr />
 
-    <div id='sidebar' class='hide' style="display: none;">
-        <!-- <p>메뉴1</p>
-        <p>메뉴2</p>
-        <p>메뉴3</p> -->
+                <div>
+                    <img src='/img/razenicon-c.png'>
+                    <p>RAZEN</p>
+                    <a href='#'>SITE</a>
+                </div>
+                <div>
+                    <img src='/img/aischoolicon-c.png'>
+                    <p>GWANGJU AI SCHOOL</p>
+                    <a href='#'>SITE</a>
+                </div>
+                <div>
+                    <img src='/img/githubicon-c.png'>
+                    <p>SOGUMM</p>
+                    <a href='#'>SITE</a>
+                </div>
+            </div>
+            <div>
+                <p>TEAM</p>
+                <hr />
+
+                <div>
+
+                </div>
+            </div>
+        </div>
     </div>
     <div id='floatingbar'>
 
@@ -49,9 +82,9 @@
                         <h1>SOGUMM</h1>
 
                         <div>
-                            <img src='/img/magnifyingglass.png' type="button" />
-                            <hr />
-                            <input type="text" id='header_linkio' />
+                            <img id='header_search' src='/img/magnifyingglass.png' />
+                            <hr/>
+                            <input type="text" id='header_linkio'/>
                         </div>
                     </div>
                     <div id="intro_article">
@@ -107,7 +140,12 @@
                         <div>
                             <p class='contents_title'>음성과 제스쳐<img src='/img/contents_soundeffct.png' /></p>
                             <p class='contents_sub'>사용자의 음성을 기반으로 다양한 형태의 자막을 생성하고<br />간단한 제스쳐로 컨텐츠를 이용할 수 있어요!</p>
-                            <!-- <p class='contents_btn'>자세히</p> -->
+                            <p class='contents_btn' onclick="toggleInfo()">자세히</p>
+                        </div>
+                    </div>
+                    <div class="contents_wrap" id="cts_stt_info">
+                        <div>
+                            <!-- <p>asdfsd</p> -->
                         </div>
                     </div>
                     <div class="contents_wrap cts_padding cts_margin" id="cts_translate">
@@ -116,8 +154,7 @@
                             <p class='contents_title'>번역 & 문서저장</p>
                             <!-- <br />
                             <p class='contents_title'>&&nbsp;문서 저장</p> -->
-                            <p class='contents_sub'>회의 및 학습 내용을 실시간으로 번역하고<br />소금이 작성한 필기 내용을 다양한 포맷의 문서로<br />저장할 수
-                                있어요</p>
+                            <p class='contents_sub'>회의 및 학습 내용을 실시간으로 번역하고<br />소금이 작성한 필기 내용을 다양한 포맷의 문서로<br />저장할 수 있어요</p>
                         </div>
                     </div>
                     <div class="contents_wrap" id="cts_footer">
@@ -139,6 +176,7 @@
         </div>
     </div>
 
+    <script type="text/javascript" src="/js/main3.js"></script>
     <script src="/js/lib/highlight.min.js"></script>
     <script src="/js/base.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
