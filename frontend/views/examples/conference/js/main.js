@@ -505,6 +505,9 @@ $(function () {
         } else {
           quiz_text.innerHTML = "퀴즈의 정답을 제대로 입력하지 않은 것 같아요. (O/X)";
         }
+        setTimeout(function () {
+          quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+        }, 5000); // 5초 후에 실행
       }
     } else if (string.endsWith('사랑')) {
       let userId_heart = userId + "_heart";
@@ -764,6 +767,9 @@ async function predict() {
           quiz_text.innerHTML = "틀렸습니다. 정답은 X였습니다.";
         }
       }
+      setTimeout(function () {
+        quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+      }, 5000); // 3초 후에 실행
       allquiz[remoteUserId_qc] = null;
       socket.emit('sendQuiz', allquiz);
     }
@@ -787,6 +793,9 @@ async function predict2() {
   let remoteUserId_qi = roomId + remoteUserId + "_qi";
   if (prediction[1].probability > 0.99) {
     quiz_text.innerHTML = "자리를 이탈하셔서 자동으로 카메라를 닫습니다.";
+    setTimeout(function () {
+      quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+    }, 5000); // 3초 후에 실행
     if ($btnCamera.className != 'active') {
       $('#btn-camera').addClass('active');
       mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
@@ -796,6 +805,9 @@ async function predict2() {
     allquiz[userId_a] = 0;
     if (allquiz[remoteUserId_a]) {
       quiz_text.innerHTML = remoteUserId + "님이 자리를 비우셨어요.";
+      setTimeout(function () {
+        quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+      }, 5000); // 3초 후에 실행
     }
   }
   socket.emit('sendQuiz', allquiz);
