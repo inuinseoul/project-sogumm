@@ -133,17 +133,22 @@ module.exports = (http) => {
         context[roomId_en] = "";
       }
       translate(String(text), { to: 'en' }).then(res => {
+        function capitalize(s) {
+          return s.replace(/\S/, function (m) {
+            return m.toUpperCase();
+          });
+        }
         if (big) {
           if (highlight) {
-            context[roomId_en] += "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0);\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+            context[roomId_en] += "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0);\">" + userId + ": " + capitalize(res.text) + "</p>" + "<p>" + today + "</p>" + "</div>";
           } else {
-            context[roomId_en] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+            context[roomId_en] += "<div>" + "<p style=\"font-size:30px;\">" + userId + ": " + capitalize(res.text) + "</p>" + "<p>" + today + "</p>" + "</div>";
           }
         } else {
           if (highlight) {
-            context[roomId_en] += "<div>" + "<p style=\"color:rgb(255, 0, 0);\">" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+            context[roomId_en] += "<div>" + "<p style=\"color:rgb(255, 0, 0);\">" + userId + ": " + capitalize(res.text) + "</p>" + "<p>" + today + "</p>" + "</div>";
           } else {
-            context[roomId_en] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
+            context[roomId_en] += "<div>" + "<p>" + userId + ": " + capitalize(res.text) + "</p>" + "<p>" + today + "</p>" + "</div>";
           }
         }
         io.emit('getScript', context);
