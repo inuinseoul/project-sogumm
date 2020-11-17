@@ -16,7 +16,7 @@ let remoteUserId;
 let users = [];
 let translate = 0;
 let quizing = 0;
-let sound_list = Array.from({ length: 100 }, () => 1200);
+let sound_list = Array.from({ length: 100 }, () => 1500);
 let sound_list_i = 0;
 let roomId;
 const socket = io();
