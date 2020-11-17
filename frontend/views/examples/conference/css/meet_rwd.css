@@ -39,7 +39,7 @@ video.effect {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translateY(-50%) translateX(-50%);
+  transform: translateY(-50%) translateX(-50%) scaleX(-1);
 }
 
 .room #enter-wrap,
@@ -54,7 +54,7 @@ video.effect {
   height: auto;
   border: solid 1px #fff;
 
-  transform: translateY(0);
+  transform: translateY(0) scaleX(-1);
 
   z-index: 120;
 }
