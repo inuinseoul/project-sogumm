@@ -275,7 +275,7 @@ $(function () {
     return false;
   }
 
-  const recognition = new webkitSpeechRecognition();
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
   const $btnMic = document.querySelector('#btn-mic');
   const $resultWrap = document.querySelector('#result');
 
