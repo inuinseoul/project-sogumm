@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -32,6 +33,7 @@
     <script src="/js/lib/DetectRTC.js"></script>
     <script src="/js/utils.js"></script>
 </head>
+
 <body>
     
     <div id='sidebar' class='hide'>
@@ -78,7 +80,7 @@
                     <div id='intro_header'>
                         <!-- <h1>SOGEUM</h1> -->
                         <h1>SOGUMM</h1>
-                        
+
                         <div>
                             <img id='header_search' src='/img/magnifyingglass.png' />
                             <hr/>
@@ -86,10 +88,10 @@
                         </div>
                     </div>
                     <div id="intro_article">
-                        <img src='/img/menu_close.png'  onclick='changeBar()'/>
+                        <img src='/img/menu_close.png' onclick='changeBar()' />
                         <p>언택트 시대, 소중한 지금을<br />소금에서 함께해요!</p>
                         <!-- <p>소금으로 팀플 과제도<br />간단하게!</p> -->
-    
+
                         <a href='/conference' target='_self'>CREATE</a>
                     </div>
                     <img class='target' src='/img/targetu.png' />
@@ -101,9 +103,18 @@
                     <div class="contents_wrap" id="cts_top">
                         <div class="contents_slide">
                             <ul>
-                                <li><p><strong>tip</strong>.&nbsp;&nbsp;<span style="color: #ff6c4f;">소금</span>이 처음이시면 아래로 스크롤하여 기능을 살펴보세요</p></li>
-                                <li><p><strong>tip</strong>.&nbsp;&nbsp;좌측 중앙 <span style="color: #ff6c4f;">CREATE</span> 버튼을 누르시면 미팅을 시작하실 수 있습니다</p></li>
-                                <li><p><strong>tip</strong>.&nbsp;&nbsp;상단의 <span style="color: #ff6c4f;">검색상자</span>를 누른 후 방 코드를  입력하면 입장할 수 있습니다</p></li>
+                                <li>
+                                    <p><strong>tip</strong>.&nbsp;&nbsp;<span style="color: #ff6c4f;">소금</span>이 처음이시면
+                                        아래로 스크롤하여 기능을 살펴보세요</p>
+                                </li>
+                                <li>
+                                    <p><strong>tip</strong>.&nbsp;&nbsp;좌측 중앙 <span
+                                            style="color: #ff6c4f;">CREATE</span> 버튼을 누르시면 미팅을 시작하실 수 있습니다</p>
+                                </li>
+                                <li>
+                                    <p><strong>tip</strong>.&nbsp;&nbsp;상단의 <span style="color: #ff6c4f;">검색상자</span>를
+                                        누른 후 방 코드를 입력하면 입장할 수 있습니다</p>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -126,8 +137,8 @@
                     </div>
                     <div class="contents_wrap cts_padding cts_margin" id="cts_stt">
                         <img id='img_stt' src='/img/contents_stt7.png' />
-                        <div>                            
-                            <p class='contents_title'>음성과 제스쳐<img src='/img/contents_soundeffct.png'/></p>
+                        <div>
+                            <p class='contents_title'>음성과 제스쳐<img src='/img/contents_soundeffct.png' /></p>
                             <p class='contents_sub'>사용자의 음성을 기반으로 다양한 형태의 자막을 생성하고<br />간단한 제스쳐로 컨텐츠를 이용할 수 있어요!</p>
                             <p class='contents_btn' onclick="toggleInfo()">자세히</p>
                         </div>
@@ -137,9 +148,9 @@
                             <!-- <p>asdfsd</p> -->
                         </div>
                     </div>
-                    <div class="contents_wrap cts_padding cts_margin" id="cts_translate">       
-                        <img id='img_translate' src="/img/contents_translation.png" /> 
-                        <div> 
+                    <div class="contents_wrap cts_padding cts_margin" id="cts_translate">
+                        <img id='img_translate' src="/img/contents_translation.png" />
+                        <div>
                             <p class='contents_title'>번역 & 문서저장</p>
                             <!-- <br />
                             <p class='contents_title'>&&nbsp;문서 저장</p> -->
@@ -149,11 +160,17 @@
                     <div class="contents_wrap" id="cts_footer">
                         <!-- <p>팀 후동이 소금구이</p> -->
                         <div id="footer_icons">
-                            <a href="https://razen.io/"><div class="iconbox" id='bicon_razen'></div></a>
-                            <a href="http://ai.gitct.kr/"><div class="iconbox" id='bicon_aischool'></div></a>
-                            <a href="https://github.com/inuinseoul/project-sogumm"><div class="iconbox" id='bicon_github'></div></a>
+                            <a href="https://razen.io/">
+                                <div class="iconbox" id='bicon_razen'></div>
+                            </a>
+                            <a href="http://ai.gitct.kr/">
+                                <div class="iconbox" id='bicon_aischool'></div>
+                            </a>
+                            <a href="https://github.com/inuinseoul/project-sogumm">
+                                <div class="iconbox" id='bicon_github'></div>
+                            </a>
                         </div>
-                    </div>    
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,4 +181,5 @@
     <script src="/js/base.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 </body>
+
 </html>

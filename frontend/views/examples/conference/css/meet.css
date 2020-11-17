@@ -542,7 +542,7 @@ input:checked + .slider:before {
     /*
     *   NIGHTMODE-OPTION
     */
-    z-index: 110;
+    z-index: 117;
 }
 .contents_underbar {
     width: 100%;
