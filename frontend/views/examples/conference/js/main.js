@@ -19,6 +19,7 @@ let quizing = 0;
 let sound_list = Array.from({ length: 100 }, () => 1500);
 let sound_list_i = 0;
 let roomId;
+let escape_check = 0;
 const socket = io();
 const mediaHandler = new MediaHandler();
 const $videoWrap = $('#video-wrap');
@@ -508,6 +509,8 @@ $(function () {
         setTimeout(function () {
           if (remoteUserId != undefined) {
             quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+          } else {
+            quiz_text.innerHTML = "방 링크를 공유해서 상대방과 만나보세요!";
           }
         }, 5000); // 5초 후에 실행
       }
@@ -772,6 +775,8 @@ async function predict() {
       setTimeout(function () {
         if (remoteUserId != undefined) {
           quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+        } else {
+          quiz_text.innerHTML = "방 링크를 공유해서 상대방과 만나보세요!";
         }
       }, 5000); // 3초 후에 실행
       allquiz[remoteUserId_qc] = null;
@@ -796,24 +801,32 @@ async function predict2() {
   let userId_a = roomId + userId + "_a";
   let remoteUserId_qi = roomId + remoteUserId + "_qi";
   if (prediction[1].probability > 0.99) {
-    quiz_text.innerHTML = "자리를 이탈하셔서 자동으로 카메라를 닫습니다.";
-    setTimeout(function () {
-      if (remoteUserId != undefined) {
-        quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+    escape_check = escape_check + 1;
+    if (escape_check > 50) {
+      quiz_text.innerHTML = "자리를 이탈하셔서 자동으로 카메라를 닫습니다.";
+      if ($btnCamera.className != 'active') {
+        $('#btn-camera').addClass('active');
+        mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
       }
-    }, 5000); // 3초 후에 실행
-    if ($btnCamera.className != 'active') {
-      $('#btn-camera').addClass('active');
-      mediaHandler[$('#btn-camera').hasClass('active') ? 'pauseVideo' : 'resumeVideo']();
+      setTimeout(function () {
+        if (remoteUserId != undefined) {
+          quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+        } else {
+          quiz_text.innerHTML = "방 링크를 공유해서 상대방과 만나보세요!";
+        }
+      }, 5000); // 5초 후에 실행
     }
     allquiz[userId_a] = 1;
   } else {
+    escape_check = 0;
     allquiz[userId_a] = 0;
     if (allquiz[remoteUserId_a]) {
       quiz_text.innerHTML = remoteUserId + "님이 자리를 비우셨어요.";
       setTimeout(function () {
         if (remoteUserId != undefined) {
           quiz_text.innerHTML = remoteUserId + "님과 연결 중입니다.";
+        } else {
+          quiz_text.innerHTML = "방 링크를 공유해서 상대방과 만나보세요!";
         }
       }, 5000); // 3초 후에 실행
     }
