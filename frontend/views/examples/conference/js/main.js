@@ -270,10 +270,10 @@ $(function () {
    * 여기부터 음성관련 코드
    */
 
-  if (typeof webkitSpeechRecognition !== 'function') {
-    alert('크롬에서만 동작 합니다.');
-    return false;
-  }
+  // if (typeof webkitSpeechRecognition !== 'function') {
+  //   alert('크롬에서만 동작 합니다.');
+  //   return false;
+  // }
 
   const recognition = new webkitSpeechRecognition();
   const $btnMic = document.querySelector('#btn-mic');
