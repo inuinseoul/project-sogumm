@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>SOGUMM</title>
 
     <link rel='stylesheet' href='/css/main3.css' />
-    <link rel='stylesheet' href='/css/sidebar.css' />
+    <link rel='stylesheet' href='/css/sidebar2.css' />
     
     <script type='text/javascript'>
         function changeBar() {
@@ -33,37 +32,88 @@
     <script src="/js/lib/DetectRTC.js"></script>
     <script src="/js/utils.js"></script>
 </head>
-
 <body>
     
-    <div id='sidebar' class='hide'>
+    <div id='sidebar' class='show'>
         <div id="sidebar_wrap">
-            <div>
+            <div id='sidebar_link'>
                 <p>LINK</p>
-                <hr />
 
-                <div>
-                    <img src='/img/razenicon-c.png'>
-                    <p>RAZEN</p>
-                    <a href='#'>SITE</a>
+                <div class='link_box'>
+                    <div>
+                        <div>
+                            <p>RAZEN</p>
+                            <p>라젠, 상상을 넘어 인공지능 솔루션,<br />드론 플랫폼, RF시스템</p>
+                        </div>
+                        <img id='link_razenicon' src='/img/razenicon-c.png'>
+                    </div>
+                    <div>
+                        <div onclick="window.open('https\:\/\/razen.io\/')">
+                            <p>바로가기&nbsp;</p>
+                            <p>≫</p>
+                        </div>
+                        <hr />
+                    </div>
                 </div>
-                <div>
-                    <img src='/img/aischoolicon-c.png'>
-                    <p>GWANGJU AI SCHOOL</p>
-                    <a href='#'>SITE</a>
+                <div class='link_box'>
+                    <div>
+                        <div>
+                            <p>AI SCHOOL</p>
+                            <p>AI 특화 인재 양성 인공지능 전문 교육기관<br />광주 인공지능사관학교</p>
+                        </div>
+                        <img id='link_aishcoolicon' src='/img/aischoolicon-c.png'>
+                    </div>
+                    <div>
+                        <div onclick="window.open('http\:\/\/ai.gitct.kr\/')">
+                            <p>바로가기&nbsp;</p>
+                            <p>≫</p>
+                        </div>
+                        <hr />
+                    </div>
                 </div>
-                <div>
-                    <img src='/img/githubicon-c.png'>
-                    <p>SOGUMM</p>
-                    <a href='#'>SITE</a>
+                <div class='link_box'>
+                    <div>
+                        <div>
+                            <p>GITHUB</p>
+                            <p>팀 후동이소금구이 기업 연계 프로젝트<br />'SOGUMM' 깃허브</p>
+                        </div>
+                        <img id='link_githubicon' src='/img/githubicon-c.png'>
+                    </div>
+                    <div>
+                        <div onclick="window.open('https\:\/\/github.com\/inuinseoul\/project-sogumm')">
+                            <p>바로가기&nbsp;</p>
+                            <p>≫</p>
+                        </div>
+                        <hr />
+                    </div>
                 </div>
             </div>
-            <div>
+
+            <div id='sidebar_team'>
                 <p>TEAM</p>
+
+                <div class='team_box'>
+                    <p class='tb-bold tb-black'>팀 명</p>
+                    <p>후동이소금구이</p>
+                </div>
+                
                 <hr />
 
-                <div>
-
+                <div class='team_box'>
+                    <p class='tb-bold tb-black'>팀 장</p>
+                    <p class='tb-blue'>박인우</p>
+                </div>
+                <div class='team_box'>
+                    <p class='tb-bold tb-black'>팀 원</p>
+                    <p>이형석</p>
+                </div>
+                <div class='team_box'>
+                    <p></p>
+                    <p>이소현</p>
+                </div>
+                <div class='team_box'>
+                    <p></p>
+                    <p>김주영</p>
                 </div>
             </div>
         </div>
@@ -80,7 +130,7 @@
                     <div id='intro_header'>
                         <!-- <h1>SOGEUM</h1> -->
                         <h1>SOGUMM</h1>
-
+                        
                         <div>
                             <img id='header_search' src='/img/magnifyingglass.png' />
                             <hr/>
@@ -88,10 +138,10 @@
                         </div>
                     </div>
                     <div id="intro_article">
-                        <img src='/img/menu_close.png' onclick='changeBar()' />
+                        <img src='/img/menu_close.png'  onclick='changeBar()'/>
                         <p>언택트 시대, 소중한 지금을<br />소금에서 함께해요!</p>
                         <!-- <p>소금으로 팀플 과제도<br />간단하게!</p> -->
-
+    
                         <a href='/conference' target='_self'>CREATE</a>
                     </div>
                     <img class='target' src='/img/targetu.png' />
@@ -103,18 +153,9 @@
                     <div class="contents_wrap" id="cts_top">
                         <div class="contents_slide">
                             <ul>
-                                <li>
-                                    <p><strong>tip</strong>.&nbsp;&nbsp;<span style="color: #ff6c4f;">소금</span>이 처음이시면
-                                        아래로 스크롤하여 기능을 살펴보세요</p>
-                                </li>
-                                <li>
-                                    <p><strong>tip</strong>.&nbsp;&nbsp;좌측 중앙 <span
-                                            style="color: #ff6c4f;">CREATE</span> 버튼을 누르시면 미팅을 시작하실 수 있습니다</p>
-                                </li>
-                                <li>
-                                    <p><strong>tip</strong>.&nbsp;&nbsp;상단의 <span style="color: #ff6c4f;">검색상자</span>를
-                                        누른 후 방 코드를 입력하면 입장할 수 있습니다</p>
-                                </li>
+                                <li><p><strong>tip</strong>.&nbsp;&nbsp;<span style="color: #ff6c4f;">소금</span>이 처음이시면 아래로 스크롤하여 기능을 살펴보세요</p></li>
+                                <li><p><strong>tip</strong>.&nbsp;&nbsp;좌측 중앙 <span style="color: #ff6c4f;">CREATE</span> 버튼을 누르시면 미팅을 시작하실 수 있습니다</p></li>
+                                <li><p><strong>tip</strong>.&nbsp;&nbsp;상단의 <span style="color: #ff6c4f;">검색상자</span>를 누른 후 방 코드를  입력하면 입장할 수 있습니다</p></li>
                             </ul>
                         </div>
                     </div>
@@ -137,10 +178,10 @@
                     </div>
                     <div class="contents_wrap cts_padding cts_margin" id="cts_stt">
                         <img id='img_stt' src='/img/contents_stt7.png' />
-                        <div>
-                            <p class='contents_title'>음성과 제스쳐<img src='/img/contents_soundeffct.png' /></p>
+                        <div>                            
+                            <p class='contents_title'>음성과 제스쳐<img src='/img/contents_soundeffct.png'/></p>
                             <p class='contents_sub'>사용자의 음성을 기반으로 다양한 형태의 자막을 생성하고<br />간단한 제스쳐로 컨텐츠를 이용할 수 있어요!</p>
-                            <p class='contents_btn' onclick="toggleInfo()">자세히</p>
+                            <!-- <p class='contents_btn' onclick="toggleInfo()">자세히</p> -->
                         </div>
                     </div>
                     <div class="contents_wrap" id="cts_stt_info">
@@ -148,9 +189,9 @@
                             <!-- <p>asdfsd</p> -->
                         </div>
                     </div>
-                    <div class="contents_wrap cts_padding cts_margin" id="cts_translate">
-                        <img id='img_translate' src="/img/contents_translation.png" />
-                        <div>
+                    <div class="contents_wrap cts_padding cts_margin" id="cts_translate">       
+                        <img id='img_translate' src="/img/contents_translation.png" /> 
+                        <div> 
                             <p class='contents_title'>번역 & 문서저장</p>
                             <!-- <br />
                             <p class='contents_title'>&&nbsp;문서 저장</p> -->
@@ -160,17 +201,11 @@
                     <div class="contents_wrap" id="cts_footer">
                         <!-- <p>팀 후동이 소금구이</p> -->
                         <div id="footer_icons">
-                            <a href="https://razen.io/">
-                                <div class="iconbox" id='bicon_razen'></div>
-                            </a>
-                            <a href="http://ai.gitct.kr/">
-                                <div class="iconbox" id='bicon_aischool'></div>
-                            </a>
-                            <a href="https://github.com/inuinseoul/project-sogumm">
-                                <div class="iconbox" id='bicon_github'></div>
-                            </a>
+                            <a href="https://razen.io/"><div class="iconbox" id='bicon_razen'></div></a>
+                            <a href="http://ai.gitct.kr/"><div class="iconbox" id='bicon_aischool'></div></a>
+                            <a href="https://github.com/inuinseoul/project-sogumm"><div class="iconbox" id='bicon_github'></div></a>
                         </div>
-                    </div>
+                    </div>    
                 </div>
             </div>
         </div>
@@ -181,5 +216,4 @@
     <script src="/js/base.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 </body>
-
 </html>
