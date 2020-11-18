@@ -747,10 +747,10 @@ async function predict() {
   let remoteUserId_qc = roomId + remoteUserId + "_qc";
   if (allquiz[remoteUserId_qi]) {
     quiz_text.innerHTML = '"' + allquiz[remoteUserId_qi] + '"';
-    if (prediction[0].probability > 0.95) {
+    if (prediction[0].probability > 0.80) {
       classPrediction = "O";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
-    } else if (prediction[1].probability > 0.95) {
+    } else if (prediction[1].probability > 0.80) {
       classPrediction = "X";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
     } else {
