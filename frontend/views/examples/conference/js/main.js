@@ -24,6 +24,7 @@ const socket = io();
 const mediaHandler = new MediaHandler();
 const $videoWrap = $('#video-wrap');
 const $btnCamera = document.querySelector('#btn-camera');
+const $btnMic = document.querySelector('#btn-mic');
 
 $(function () {
   console.log('Loaded Main');
@@ -276,7 +277,6 @@ $(function () {
   }
 
   const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
-  const $btnMic = document.querySelector('#btn-mic');
   const $resultWrap = document.querySelector('#result');
 
   let isRecognizing = false;
@@ -747,10 +747,10 @@ async function predict() {
   let remoteUserId_qc = roomId + remoteUserId + "_qc";
   if (allquiz[remoteUserId_qi]) {
     quiz_text.innerHTML = '"' + allquiz[remoteUserId_qi] + '"';
-    if (prediction[0].probability > 0.80) {
+    if (prediction[0].probability > 0.90) {
       classPrediction = "O";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
-    } else if (prediction[1].probability > 0.80) {
+    } else if (prediction[1].probability > 0.90) {
       classPrediction = "X";
       quiz_motion.innerHTML = '의 정답은?  ' + "<strong>" + classPrediction + "</strong>";
     } else {
@@ -789,7 +789,7 @@ async function predict() {
   userId_p = roomId + userId + "_p";
   answers[userId_p] = classPrediction;
   socket.emit('sendAnswer', answers);
-  if (!(allquiz[remoteUserId_qi])) {
+  if (allquiz[remoteUserId_qi] == null) {
     URL = './a_model/';
     init();
   }
@@ -828,11 +828,11 @@ async function predict2() {
         } else {
           quiz_text.innerHTML = "방 링크를 공유해서 상대방과 만나보세요!";
         }
-      }, 5000); // 3초 후에 실행
+      }, 5000); // 5초 후에 실행
     }
   }
   socket.emit('sendQuiz', allquiz);
-  if (allquiz[remoteUserId_qi]) {
+  if (allquiz[remoteUserId_qi] != null) {
     URL = './q_model/';
     init();
   }
@@ -862,9 +862,7 @@ function init2() {
   }
 
   var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  var voiceSelect = document.getElementById("voice");
   var source;
-  var stream;
 
   var analyser = audioCtx.createAnalyser();
   analyser.minDecibels = -90;
@@ -875,8 +873,6 @@ function init2() {
   var gainNode = audioCtx.createGain();
   var biquadFilter = audioCtx.createBiquadFilter();
   var convolver = audioCtx.createConvolver();
-
-  var soundSource;
 
   ajaxRequest = new XMLHttpRequest();
 
@@ -925,45 +921,45 @@ function init2() {
     var dataArrayAlt = new Uint8Array(bufferLengthAlt);//데이터를 담을 bufferLength 크기의 Unit8Array의 배열을 생성
 
     var drawAlt = function () {
-      analyser.getByteFrequencyData(dataArrayAlt);
+      if ($btnMic.className == 'on') {
+        analyser.getByteFrequencyData(dataArrayAlt);
 
-      let average = sound_list.reduce((sum, el) => sum + el, 0) / sound_list.length;
+        let average = sound_list.reduce((sum, el) => sum + el, 0) / sound_list.length;
 
-      var sum_height = 0;
-      for (var key in dataArrayAlt) {
-        sum_height += dataArrayAlt[key];
-      }
-
-      if (sum_height > (average + 650)) {
-        console.log("초과함!" + sum_height);
-        big = 1;
-      } else if (sum_height > 500) {
-        sound_list[sound_list_i] = sum_height;
-        sound_list_i = (sound_list_i + 1) % 100;
-      }
-      // btn_sound_point.innerHTML = "현재수치: " + sum_height;
-
-      let remoteUserId_heart = remoteUserId + "_heart";
-      let remoteUserId_focus = remoteUserId + "_focus";
-      if (animations[remoteUserId_heart]) {
-        if (!($('#animation').length)) {
-          console.log("create heart-animation");
-          $videoWrap.append('<img src="css/heart.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+        var sum_height = 0;
+        for (var key in dataArrayAlt) {
+          sum_height += dataArrayAlt[key];
         }
-      } else if (animations[remoteUserId_focus]) {
-        if (!($('#animation').length)) {
-          console.log("create heart-animation");
-          $videoWrap.append('<img src="css/focus.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+
+        if (sum_height > (average + 500)) {
+          big = 1;
+        } else if (sum_height > 750) {
+          sound_list[sound_list_i] = sum_height;
+          sound_list_i = (sound_list_i + 1) % 100;
         }
-      } else {
-        if (($('#animation').length)) {
-          console.log("remove animation");
-          $('img').remove('#animation');
+        // btn_sound_point.innerHTML = "현재수치: " + sum_height;
+
+        let remoteUserId_heart = remoteUserId + "_heart";
+        let remoteUserId_focus = remoteUserId + "_focus";
+        if (animations[remoteUserId_heart]) {
+          if (!($('#animation').length)) {
+            console.log("create heart-animation");
+            $videoWrap.append('<img src="css/heart.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+          }
+        } else if (animations[remoteUserId_focus]) {
+          if (!($('#animation').length)) {
+            console.log("create heart-animation");
+            $videoWrap.append('<img src="css/focus.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+          }
+        } else {
+          if (($('#animation').length)) {
+            console.log("remove animation");
+            $('img').remove('#animation');
+          }
         }
       }
     };
 
-    timerId = setInterval(drawAlt, 5);
+    timerId = setInterval(drawAlt, 100);
   }
-
 }
