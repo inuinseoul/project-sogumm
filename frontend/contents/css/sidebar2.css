@@ -29,28 +29,29 @@
 #sidebar_link > p {
   font-weight: 900;
   color: black;
-  font-size: 35px;
+  /* font-size: 35px; */
+  font-size: 32px;
 
-  width: 78%;
+  width: 70%;
   margin: auto;
   text-align: right;
 
-  padding-top: 20px;
+  padding-top: 37px;
   padding-bottom: 30px;
 }
 
 
 .link_box {
-  width: 78%;
+  width: 70%;
   margin: auto;
 
-  padding-bottom: 15px;
+  padding-bottom: 25px;
 }
-.link_box:last-child { padding-bottom: 50px; }
+.link_box:last-child { padding-bottom: 70px; }
 .link_box > div:nth-child(1) {
   /* background-color: red; */
   width: 100%;
-  height: 100px;
+  height: 90px;
 
   position: relative;
 
@@ -67,40 +68,30 @@
 }
 .link_box > div:nth-child(1) > div > p {
   font-weight: 300;
-  font-size: 16px;
+  font-size: 14px;
   color: black;
 }
 .link_box > div:nth-child(1) > div > p:first-child {
   font-style: italic;
   font-weight: 700;
-  font-size: 30px;
+  font-size: 25px;
 }
 .link_box > div:nth-child(1) > img {
-  height: 100%;
+  /* height: 90%; */
   position: absolute;
   right: 0px;
-  /* top: 5px; */
+  top: 7px;
 }
 #link_razenicon {
-  height: 83%;
+  height: 77%;
 }
 #link_aishcoolicon {
-  height: 67%;
-  right: 10px;
-}
-#link_githubicon {
-  height: 79%;
-}
-/* #link_razenicon {
-  height: 78%;
-}
-#link_aishcoolicon {
-  height: 62%;
+  height: 60%;
   right: 10px;
 }
 #link_githubicon {
   height: 74%;
-} */
+}
 .link_box > div:nth-child(2) {
   width: 100%;
   height: 35px;
@@ -112,9 +103,9 @@
   align-items: center;
 }
 .link_box > div:nth-child(2) > div:first-child {
-  width: 35px;
-  height: 35px;
-  min-width: 35px;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
   background-color: #f55610;
   border-radius: 100px;
   
@@ -160,12 +151,10 @@
 .link_box > div:nth-child(2) > div:first-child > p:last-child {
   transition-duration: 0.8s;
   width: 100%;
+  margin-right: 8px;
+
+  font-size: 12px;
   text-align: right;
-  margin-right: 9px;
-  /* background-color: wheat; */
-  /* position: relative;
-  right: 50%;
-  transform: translateX(50%); */
 }
 .link_box > div:nth-child(2) > div:first-child:hover > p:last-child {
   transition-duration: 0.8s;
@@ -183,30 +172,30 @@
 #sidebar_team > p {
   font-weight: 900;
   color: black;
-  font-size: 35px;
+  font-size: 32px;
 
-  width: 78%;
+  width: 70%;
   margin: auto;
   text-align: right;
 
-  padding-top: 20px;
+  padding-top: 33px;
   padding-bottom: 30px;
 }
 #sidebar_team > hr {
-  width: 78%;
+  width: 70%;
   margin: auto;
   
   margin-top: 10px;
   margin-bottom: 10px;
 }
 .team_box {
-  width: 78%;
+  width: 70%;
   
   margin: auto;
 
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 500;
-  color: black;
+  color: rgb(100, 100, 100);
   /* color: rgb(88, 88, 88); */
 
   display: flex;
@@ -219,14 +208,19 @@
 }
 .tb-bold {
   font-weight: 700;
+  /* font-size: 22px; */
 }
 .tb-orange {
   color: #ff6c4f;
   /* color: #000000; */
+  /* color: #4286f5; */
 }
 .tb-blue {
   color: #4286f5;
-  /* color: #ff6c4f; */
+  /* color: black; */
+}
+.tb-black {
+  color: #000000;
 }
 .team_box {
   padding-bottom: 5px;
