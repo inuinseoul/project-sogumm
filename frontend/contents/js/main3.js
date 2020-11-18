@@ -5,10 +5,10 @@ const linkio = document.getElementById('header_linkio');
 var temp;
 
 function goSite() {
-    if(rel.test(linkio.value)) {
-        window.location.href = io;
+    if(rel.test(linkio.value) == true) {
+        window.location.href = linkio.value;
     }
-    else if(res.test(linkio.value)) {
+    else if(res.test(linkio.value) == true) {
         window.location.href = url+linkio.value;
     }
     else {
