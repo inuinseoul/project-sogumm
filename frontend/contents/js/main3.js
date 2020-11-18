@@ -1,9 +1,6 @@
-
-// "https://www.sogumm.co.kr/conference/#M2RAMH26-SVO"
-// "https://www.sogumm.co.kr/conference/#5U2V5P5H-6KT"
-const url = 'https://www.sogumm.co.kr/conference/'
-const rel = /^https:\/\/www.sogumm.co.kr\/conference\/#.{8}-.{3}$/gi;
-const res = /^#.{8}-.{3}$/g;
+const url = 'https://www.sogumm.co.kr/conference/';
+const rel = /^https:\/\/www.sogumm.co.kr\/conference\/#.{4,12}-.{1,5}$/gi;
+const res = /^#.{4,12}-.{1,5}$/g;
 const linkio = document.getElementById('header_linkio');
 var temp;
 
