@@ -934,7 +934,8 @@ function init2() {
         sum_height += dataArrayAlt[key];
       }
 
-      if (sum_height > (average + 400)) {
+      if (sum_height > (average + 650)) {
+        console.log("초과함!" + sum_height);
         big = 1;
       } else if (sum_height > 500) {
         sound_list[sound_list_i] = sum_height;
