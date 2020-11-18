@@ -47,7 +47,7 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
 
     z-index: 100;
     
-    background-color: white;
+    background-color: #eeeeee;
     
     transition-duration: 0.8s;
 }
@@ -541,6 +541,9 @@ a, a:hover, a:visited, a:link {text-decoration: none;}
         margin-top: 15%;
     }
     .target {
-        width: 40%;
+        width: 38%;
+    }
+    #intro_header {
+        width: 100%;
     }
 }
