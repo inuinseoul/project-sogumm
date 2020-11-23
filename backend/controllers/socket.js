@@ -16,6 +16,7 @@ module.exports = (http) => {
   let allquiz = {};
   let answers = {};
   let animations = {};
+  let tts = {};
 
   /**
    * SocketId로 방을 탐색 합니다.
@@ -172,13 +173,20 @@ module.exports = (http) => {
           } else {
             context[roomId_ko] += "<div>" + "<p>" + userId + ": " + res.text + "</p>" + "<p>" + today + "</p>" + "</div>";
           }
-
-
         }
         io.emit('getScript', context);
       }).catch(err => {
         console.error(err);
       })
+    });
+
+    socket.on('sendTTS', (text, roomId, userId) => {
+
+      if (tts[roomId] == undefined) {
+        tts[roomId] = "";
+      }
+      tts[roomId] += userId + "," + text + ",\n";
+      io.emit('getTTS', tts);
     });
   });
 

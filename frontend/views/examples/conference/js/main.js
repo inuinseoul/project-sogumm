@@ -10,6 +10,7 @@ let context = {};
 let allquiz = {};
 let answers = {};
 let animations = {};
+let tts = {};
 let language = 'ko-KR';
 let userId;
 let remoteUserId;
@@ -89,6 +90,16 @@ $(function () {
         }
         recognition.lang = language;
         recognition.stop();
+      });
+
+      $('#btn-tts').click(function () {
+        textToSpeech(tts[roomId]);
+      });
+
+      $('#btn-tts').hover(function () {
+        $(this).addClass('active');
+      }, function () {
+        $(this).removeClass('active');
       });
 
       $('#btn-lang-none').click(function () {
@@ -346,7 +357,6 @@ $(function () {
     if (context[remoteUserId] != undefined) {
       interim_span.innerHTML = linebreak(context[remoteUserId]);
     }
-
   });
 
   socket.on('getQuiz', (data) => {
@@ -365,6 +375,13 @@ $(function () {
     for (var key in data) {
       answers[key] = data[key];
     }
+  });
+
+  socket.on('getTTS', (data) => {
+    for (var key in data) {
+      tts[key] = data[key];
+    }
+    console.log(tts[roomId]);
   });
 
   recognition.onresult = function (event) {
@@ -397,7 +414,7 @@ $(function () {
           }
         }
         socket.emit('sendTranslate', transcript, big, roomId, userId, today.toLocaleTimeString(), highlight);
-
+        socket.emit('sendTTS', transcript, roomId, userId);
         if (big) {
           if (highlight == 1) {
             let now_chat = "<div>" + "<p style=\"font-size:30px; color:rgb(255, 0, 0);\">" + userId + ": " + transcript + "</p>" + "<p style=\"color:rgb(255, 0, 0)\">" + today.toLocaleTimeString() + "</p>" + "</div>";
@@ -577,6 +594,15 @@ $(function () {
   }
 
   /**
+   * 문자를 음성으로 읽어 줍니다.
+   * 지원: 크롬, 사파리, 오페라, 엣지
+   */
+  function textToSpeech(text) {
+    console.log('textToSpeech', arguments);
+    speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+  }
+
+  /**
    * 초기 설정
    */
   function initialize() {
@@ -661,6 +687,16 @@ $(function () {
         }
         recognition.lang = language;
         recognition.stop();
+      });
+
+      $('#btn-tts').click(function () {
+        textToSpeech(tts[roomId]);
+      });
+
+      $('#btn-tts').hover(function () {
+        $(this).addClass('active');
+      }, function () {
+        $(this).removeClass('active');
       });
 
       init();
