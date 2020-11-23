@@ -41,3 +41,14 @@ function setNightMode(event) {
 // }
 // document.getElementById('final_span').addEventListener('click', showOption);
 document.getElementsByClassName('switch')[0].addEventListener('click', setNightMode)
+document.getElementById('final_span').addEventListener('click', function(event) { 
+    var element = event.target;
+    var text = '';
+
+    if (element.tagName == 'P') {
+        element = event.target.parentNode;
+        text = element.childNodes[0].innerText;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    }
+});
