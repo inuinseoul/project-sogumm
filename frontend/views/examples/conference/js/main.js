@@ -95,12 +95,11 @@ $(function () {
       $('#btn-tts').click(function () {
         textToSpeech(tts[roomId]);
       });
-
-      $('#btn-tts').hover(function () {
-        $(this).addClass('active');
-      }, function () {
-        $(this).removeClass('active');
-      });
+      // $('#btn-tts').hover(function () {
+      //   $(this).addClass('active');
+      // }, function () {
+      //   $(this).removeClass('active');
+      // });
 
       $('#btn-lang-none').click(function () {
         translate = 0;
@@ -598,8 +597,25 @@ $(function () {
    * 지원: 크롬, 사파리, 오페라, 엣지
    */
   function textToSpeech(text) {
-    console.log('textToSpeech', arguments);
-    speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+
+    if ($('#btn-tts').hasClass('active')) {
+      speechSynthesis.cancel();
+      $('#btn-tts').removeClass('active');
+    }
+    else {
+      $('#btn-tts').addClass('active');
+
+      var syutter = new SpeechSynthesisUtterance(text);
+      
+      console.log('textToSpeech', arguments);
+      speechSynthesis.cancel();
+      speechSynthesis.speak(syutter);
+
+      syutter.addEventListener('end', function(event) { 
+        $('#btn-tts').removeClass('active');
+      });
+    }
+    
   }
 
   /**
@@ -692,12 +708,11 @@ $(function () {
       $('#btn-tts').click(function () {
         textToSpeech(tts[roomId]);
       });
-
-      $('#btn-tts').hover(function () {
-        $(this).addClass('active');
-      }, function () {
-        $(this).removeClass('active');
-      });
+      // $('#btn-tts').hover(function () {
+      //   $(this).addClass('active');
+      // }, function () {
+      //   $(this).removeClass('active');
+      // });
 
       init();
 

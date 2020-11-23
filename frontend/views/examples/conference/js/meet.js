@@ -44,8 +44,9 @@ document.getElementsByClassName('switch')[0].addEventListener('click', setNightM
 document.getElementById('final_span').addEventListener('click', function(event) { 
     var element = event.target;
     var text = '';
-
     if (element.tagName == 'P') {
+        $('#btn-tts').removeClass('active');
+        
         element = event.target.parentNode;
         text = element.childNodes[0].innerText;
         speechSynthesis.cancel();
