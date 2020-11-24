@@ -380,7 +380,6 @@ $(function () {
     for (var key in data) {
       tts[key] = data[key];
     }
-    console.log(tts[roomId]);
   });
 
   recognition.onresult = function (event) {
@@ -535,7 +534,6 @@ $(function () {
       animations[userId_heart] = 1;
       socket.emit('sendAnimation', animations);
       setTimeout(function () {
-        console.log("-");
         animations[userId_heart] = 0;
         socket.emit('sendAnimation', animations);
       }, 3000); // 3초 후에 실행
@@ -544,7 +542,6 @@ $(function () {
       animations[userId_focus] = 1;
       socket.emit('sendAnimation', animations);
       setTimeout(function () {
-        console.log("-");
         animations[userId_focus] = 0;
         socket.emit('sendAnimation', animations);
       }, 2000); // 2초 후에 실행
@@ -606,16 +603,16 @@ $(function () {
       $('#btn-tts').addClass('active');
 
       var syutter = new SpeechSynthesisUtterance(text);
-      
+
       console.log('textToSpeech', arguments);
       speechSynthesis.cancel();
       speechSynthesis.speak(syutter);
 
-      syutter.addEventListener('end', function(event) { 
+      syutter.addEventListener('end', function (event) {
         $('#btn-tts').removeClass('active');
       });
     }
-    
+
   }
 
   /**
@@ -982,35 +979,37 @@ function init2() {
           sum_height += dataArrayAlt[key];
         }
 
-        if (sum_height > (average + 500)) {
+        if (sum_height > (average + 430)) {
+          console.log('font-size change BIG');
           big = 1;
-        } else if (sum_height > 750) {
+        } else if (sum_height > 900) {
           sound_list[sound_list_i] = sum_height;
           sound_list_i = (sound_list_i + 1) % 100;
         }
-        // btn_sound_point.innerHTML = "현재수치: " + sum_height;
+      }
 
-        let remoteUserId_heart = remoteUserId + "_heart";
-        let remoteUserId_focus = remoteUserId + "_focus";
-        if (animations[remoteUserId_heart]) {
-          if (!($('#animation').length)) {
-            console.log("create heart-animation");
-            $videoWrap.append('<img src="css/heart.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
-          }
-        } else if (animations[remoteUserId_focus]) {
-          if (!($('#animation').length)) {
-            console.log("create heart-animation");
-            $videoWrap.append('<img src="css/focus.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
-          }
-        } else {
-          if (($('#animation').length)) {
-            console.log("remove animation");
-            $('img').remove('#animation');
-          }
+      let remoteUserId_heart = remoteUserId + "_heart";
+      let remoteUserId_focus = remoteUserId + "_focus";
+      if (animations[remoteUserId_heart]) {
+        console.log("create heart-animation");
+        if (!($('#animation').length)) {
+          console.log("create heart-animation");
+          $videoWrap.append('<img src="css/heart.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+        }
+      } else if (animations[remoteUserId_focus]) {
+        console.log("create focus-animation");
+        if (!($('#animation').length)) {
+          console.log("create focus-animation");
+          $videoWrap.append('<img src="css/focus.gif" id="animation" alt="test" style="position: relative; pointer-events: none; z-index: 115; height: 100%; width: 100%;">');
+        }
+      } else {
+        if (($('#animation').length)) {
+          console.log("remove animation");
+          $('img').remove('#animation');
         }
       }
     };
 
-    timerId = setInterval(drawAlt, 100);
+    timerId = setInterval(drawAlt, 10);
   }
 }
