@@ -16,9 +16,11 @@
             // document.write('hello')
             if(cl == 'hide') {
                 el.className = 'show';
+                document.querySelector('#intro_article > img:hover').style.transform = "rotate(90deg)";
             }
             else {
                 el.className = 'hide';
+                document.querySelector('#intro_article > img:hover').style.transform = "rotate(0deg)";
             }
         }
         function toggleInfo() {

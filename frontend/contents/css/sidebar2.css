@@ -55,6 +55,8 @@
 
   position: relative;
 
+  cursor: default;
+
   /* display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -122,7 +124,7 @@
 
   transition-duration: 0.4s;
 }
-.link_box > div:nth-child(2) > div:first-child:hover {
+.link_box:hover > div:nth-child(2) > div:first-child {
   width: 150px;
   transition-duration: 0.8s;
 }
@@ -131,7 +133,7 @@
   color: white;
   font-weight: 100;
 }
-.link_box > div:nth-child(2) > div:first-child:hover > p:first-child {
+.link_box:hover > div:nth-child(2) > div:first-child > p:first-child {
   transition-delay: 0.4s;
   transition-duration: 0.4s;
   content: "바로가기 ";
@@ -156,7 +158,7 @@
   font-size: 12px;
   text-align: right;
 }
-.link_box > div:nth-child(2) > div:first-child:hover > p:last-child {
+.link_box:hover > div:nth-child(2) > div:first-child > p:last-child {
   transition-duration: 0.8s;
   right: unset;
   transform: unset;
