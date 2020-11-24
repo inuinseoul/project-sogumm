@@ -979,10 +979,10 @@ function init2() {
           sum_height += dataArrayAlt[key];
         }
 
-        if (sum_height > (average + 430)) {
+        if (sum_height > (average + 300)) {
           console.log('font-size change BIG');
           big = 1;
-        } else if (sum_height > 900) {
+        } else if (sum_height > 700) {
           sound_list[sound_list_i] = sum_height;
           sound_list_i = (sound_list_i + 1) % 100;
         }
