@@ -26,3 +26,7 @@
 - **이형석** : 스크립트 다운로드 기능 구현, 구글 번역 API 활용<br>
 - **김주영** : 디자인 및 css,애니메이션 코드 구현<br>
 - **이소현** : 볼륨 인식 API 활용, 글씨색 변경 기능 구현<br>
+
+# 발표자료 및 세부사항
+
+https://github.com/inuinseoul/project_sogumm/blob/master/document/21%EB%B2%88%20%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%ED%8C%80%20%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C.pdf
