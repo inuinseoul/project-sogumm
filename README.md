@@ -7,7 +7,7 @@
 4. npm start 명령어 실행
 5. 크롬브라우저에서 localhost:3000으로 접속
 
-# 사용 라이브러리 및 프레임워크
+# 활용기술
 
 - node.js<br>
 - webRTC<br>
