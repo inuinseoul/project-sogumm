@@ -22,7 +22,7 @@
 
 <br>
 
-- **박인우** : socket.io 및 webRTC 활용 영상통화 기능 구현, 구글 API 및 socket.io 활용 STT 구현<br>
+- **박인우** : socket.io 및 webRTC 영상통화구현(오픈소스 사용), 구글 API 및 socket.io 활용 STT 구현<br>
 - **이형석** : 스크립트 다운로드 기능 구현, 구글 번역 API 활용<br>
 - **김주영** : 디자인 및 css,애니메이션 코드 구현<br>
 - **이소현** : 볼륨 인식 API 활용, 글씨색 변경 기능 구현<br>
